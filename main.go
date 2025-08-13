@@ -1,23 +1,12 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
 //TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
 // the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
 
 func main() {
-	//TIP <p>Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined text
-	// to see how GoLand suggests fixing the warning.</p><p>Alternatively, if available, click the lightbulb to view possible fixes.</p>
-	s := "gopher"
-	fmt.Printf("Hello and welcome, %s!\n", s)
-
-	for i := 1; i <= 5; i++ {
-		//TIP <p>To start your debugging session, right-click your code in the editor and select the Debug option.</p> <p>We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-		// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.</p>
-		fmt.Println("i =", 100/i)
-	}
+	PrintMessage("ola")
 }
 
 /*
@@ -69,4 +58,27 @@ func soma(num1 int, num2 int) int {
 	return num1 + num2
 }
 
-func subtracao(num1 int, num2 int) int {}
+func subtracao(num1 int, num2 int) int { return num1 - num2 }
+
+/*
+2.1. retorno de funções
+	Os exemplos demonstrados acima mostram a simplicidade e clareza do Go. E acredito que explicito dessa forma,
+não precisa de explicação.
+
+3. Os nomes em Go
+	Já ouviu falar nisso em outras linguagens e aqui não seria diferente, código limpo, legibilidade e simplicidade
+são os principais objetivos do desenvolvimento em Go.
+- nomes curtos, concisos e evocativos
+- não deve ter a indicação do pacote
+- métodos ou funções sem a necessidade de get... Com o tempo vai aprendendo.
+
+TAREFA
+Implemente uma função simples que recebe uma mensagem como parâmetro e imprime no console usando
+println.
+- Crie uma função chamada PrintMessage que recebe um parâmetro message do tipo string
+- dentro do corpo da função, coloque o println
+*/
+
+func PrintMessage(message string) {
+	fmt.Println(message)
+}
