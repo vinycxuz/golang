@@ -41,7 +41,7 @@ func functionName() {
 }
 
 /*
-2. Função
+2. Função (visão geral)
 	A mais simples declaração de função segue exemplo na linha 50. Fornecer parâmetros é opcional
 mas, se caso tenha é necessário 'tipar'.
 	A função main como ponto de partida é necessário, senão teremos erro de compilação e em Go, não
@@ -82,3 +82,95 @@ println.
 func PrintMessage(message string) {
 	fmt.Println(message)
 }
+
+/*
+4. Tipos de dados
+	No meu caso, tenho experiências com desenvolvimento e muito mais tempo de estudo, e é estranho
+e entediante talvez (não estou achando entediante, não sei o porque) ter que fazer isso. Mas se você está apredendo uma nova linguagem, é necessário. É como aprender
+uma nova língua, você precisa saber o alfabeto.
+	Go é esteticamente tipado, o compilador precisa saber todos os tipos de dados. E isso é maravilhoso! Os tipos
+são:
+- primitivos (int, float, bool,string)
+- compostos (struct, array, slice, map, channel)
+- interfaces
+Para declarar uma variável, utilizamos:
+*/
+
+var example string
+
+//Ou seja, palavra reservada var, nome da variavel e seu tipo. Claro que podemos tambem colocar de imediato um valor nela:
+
+var example2 string = "exemplo"
+
+/*
+4.1. Conversões
+	Alguns tipos podem ser convertidos em outros, como por exemplo um valor float para um int.
+exemplo seria algo assim:
+
+var number float = 8.8
+
+fmt.Println(int(number))
+
+Lembra a sintaxe do python nesse caso.
+
+5. Constantes e Variáveis
+	Esse parte é bem dedutível, a começar com os valores constantes (que não se alteram).
+
+const PI = 3.14
+
+	Aqui eu acabei de aprender que pode sim ter tipagem implícita, que é o caso do exemplo acima.
+E tem outra coisa bem interessante é que, se uma variável explícita estiver como parametro de uma função implícita,
+essa função se torna tipara.
+
+var value int
+
+func (value + 10)
+
+6. Transbordamento
+	As constantes numéricas não têm tamanho e nem sinal. Exemplo:
+const Ln2 =  0,693147180559945309417232121458176568075500134360255254120680009
+
+7. Tarefas múltipas e enumeração
+	As atribuições podem ser múltipas, exemplos dela:
+const carne, veg = "porco" , "soja"
+	Com a tipagem fica:
+const gato, cachorro, pato string = "Bagdá", "caramelo", "donald"
+
+Bagdá é o nome do meu gato
+
+	Podemos enumerar nossas constantes, exemplo:
+
+const (
+	EU = 0
+	TU = 1
+	ELIX = 2
+)
+
+	Também podemos dar um nome e um tipo a nossa enumeração:
+type Mouse int (
+FIO = 0
+SEMFIO = 1
+)
+
+PARA SOMENTE AS VARIAVEIS, nós podemos declarar com o operador de atribuição :=, ele é apenas para valores
+não tipados explicitamentes.
+
+var num = 5
+ou
+num := 5
+
+8. Printing
+
+	Quando utilizamos Println com o package fmt, podemos mostrar no console o que bem entedermos, se seguindo as regras.
+E quando queremos mostrar um valor atribuído, utilizamos Printf com os %d, %s ou %v. Se vocÊ já teve contato do javascript, estamos
+falando disso:
+
+const luz = "luz"
+const text = `uma mensagem de ${luz}`
+
+Aqui no GO, faremos da seguinte forma
+
+var luz string = "luz"
+
+fmt.Printf("uma mensagem de %s", luz)
+*/
