@@ -173,4 +173,16 @@ Aqui no GO, faremos da seguinte forma
 var luz string = "luz"
 
 fmt.Printf("uma mensagem de %s", luz)
+
+
+9. Tipos elementares
+	Existem 3 tipos elementares em Go:
+	- Boolean
+	- NUmber
+	- Person
+
+9.1. Boolean
+	Aí não tem mistério, é true os false (minusculo)
+
+9.2.
 */
