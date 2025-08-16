@@ -184,5 +184,28 @@ fmt.Printf("uma mensagem de %s", luz)
 9.1. Boolean
 	Aí não tem mistério, é true os false (minusculo)
 
-9.2.
+9.2. Number
+	Em GO, existe algo interessante na tipagem numerica, nós podemos colocar o comprimento apropriado
+para a máquina em que ele é executado. Exemplo:
+	int (32 ou 64, depende da maquina), porém podemos definir por exemplo um int32
+
+var a int
+var b int32
+
+	E não é permitido a soma entre eles.
+
+9.2.1. Numeros aleatórios
+	Dentro do Go, existe o pacote "math/rand", que implementa geradores de pseudoaleatórios
+
+a := rand.Int()
+b := rand.Intn(8) --- Aqui ele gera um aleatorio de 0 ate n
+
+9.3. Pacote unicode
+	Existem algumas funções uteis dentro do pacote para testar caracteres. Exemplos:
+unicode.IsLetter(ch)
+unicode.IsDigit(ch)
+unicode.IsSpace(ch)
+
+Essas funções retornam bool e o pacote utf8 tambem contem funções para trabalhar com runes.
+
 */
