@@ -208,4 +208,14 @@ unicode.IsSpace(ch)
 
 Essas funções retornam bool e o pacote utf8 tambem contem funções para trabalhar com runes.
 
+9.4. Operadores básicos
+	Os operadores são os mesmos na qual já estou habituado, então, irei apenas coloca-los aqui para continuar meu passo a passo
+== igual
+!= nao igual
+<
+>
+<=
+>=
+...
+9.5. Bitwaise operators
 */
