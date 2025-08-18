@@ -7,6 +7,16 @@ import "fmt"
 
 func main() {
 	PrintMessage("ola")
+	fmt.Println(toFahrenheit(32))
+	var str string = "Eu"
+
+	var oi = 5
+
+	var example *int
+	example = &oi
+	fmt.Printf("oi %p", example)
+
+	fmt.Println(len(str))
 }
 
 /*
@@ -218,4 +228,105 @@ Essas funções retornam bool e o pacote utf8 tambem contem funções para traba
 >=
 ...
 9.5. Bitwaise operators
+	Bitwise são operadores bit a bit que só funcionam com padrões de bits de tamanhos iguais.
+Eles são:
+& AND
+ou OR
+^ XOR
+
+Existe mais um que é extremamente interessante:
+
+<< Operador de deslocamento para a esquerda
+>> Operador de deslocamento para a direita
+
+    x := 3
+    y := 5
+    z := (x ^ y) & (x << 2)
+    fmt.Println(z)
+
+Você sabe quanto da esse resultado? Para resolver, basta lembrar qe tudo está em binário e que "é XOR e não elevado ao quadrado.
+
+*** Challenge ***
+
+Implementar a função to Fahrenheit( t Celsius) para conversar C para F. Os tipos são float32.
+A formula: F = Celsius * 9/5) + 32
+
+
+*/
+
+func toFahrenheit(Celsius float32) float32 { return (Celsius * 9 / 5) + 32 }
+
+/*
+10. Strings
+	String são uma sequencia de caracters UTF-8. Quando é declarado, reserva automaticamente 4bytes, mas o Go é inteligente
+o suficiente para reservar apenas one-nyte se a string tiver apenas 1 ASCII character.
+
+Vantagens da string em GO é que ocupam menos espaço na memória e como UTF-8 é padrão, Go não precisa codificar e decodificar
+strings como em outras linguagens. Vale lembrar que são matrizes imutáveis de bytes.
+
+Existem dois tipos literais de string:
+- Interpreted String
+- Raw String
+
+esse se tiver duvida, é bom consultar a documentação.
+
+	E ler o tamanho das strings em Go, é algo semelhante a Javascript (senão me engano). Nós simplesmente colocamos len(str).
+Por exemplo:
+var str string = "Eu"
+
+fmt.Println(len(str))
+
+Apesar disso, vale ressaltar que não podemos pegar o endereço de uma das partes da string como se ela fosse um array.
+
+10.1. Strings
+	Toda linguagem existe suas formas pré-definidas de manipular as strings. Vamos mostrar aqui em Go com o package strings e strconv.
+a) Prefixos e Sufixos
+	strings.HasPrefix(s, prefix string) bool
+	strings.HasSuffix(s, suffix string) bool
+
+	precisamos importar o package strings e dentro do método, o primeiro é qual prefixo queremos e o segundo, qual a string
+para ser analisada. Mesma lógica com sufixo.
+
+b) Contains
+	função boolean que retorna se contem uma substring na string.
+	strings.Contains(str, substr string) bool
+
+c) Replace substring
+	Podemos recolocar em uma substring uma nova string. Muito bom. Funciona assim:
+strings.Replace(str, old, new string, n int)
+
+d) Counting
+	Podemos também contar o número de ocorrências em uma substring.
+strings.Count(s, str string) int
+
+var str string = "Hello, how is it going, Hugo?"
+    var manyG = "gggggggggg"
+    fmt.Printf("Number of H's in %s is: ", str)
+    fmt.Printf("%d\n", strings.Count(str, "H"))         // count occurences
+    fmt.Printf("Number of double g's in %s is: ", manyG)
+    fmt.Printf("%d\n", strings.Count(manyG, "gg"))
+
+e) Repeat
+	Podemos repetir uma string como se fosse um laço for:
+strings.Repeat(s, count int) string
+
+var origS string = "Hi there! "
+    var newS string
+    newS = strings.Repeat(origS, 3)     // Repeating origS 3 times
+    fmt.Printf("The new repeated string is: %s\n", newS)
+
+11. Ponteiros
+	Aqui é maravilhoso, e acredito que tenha sido um dos principais motivos de eu estar migrando para Go. Umas das coisas
+mais legais que já estudei na vida foi ponteiros, isso em C. E agora veremos como funciona por aqui.
+	Em Go, nós podemos definir se uma variável é um ponteiro ou não. Isso permite ao usuário controle básico sobre o layout básico
+da mémoria, o controle do tamanho total de uma determinada coleção de estrutura de dados, numero de alocações e os padrões de acesso
+à memória.
+	Assim como em C, ao colocarmos o operador &, temos o endereço de memória daquela variável. Exemplo
+var oi = 5
+fmt. Printf("Isso é um numero %d, e está localizado aqui %p", oi, &oi)
+
+Para declarar uma variável como um ponteiro, faremos da seguinte forma
+var example *int
+example = &oi
+printf("%d", example)
 */
