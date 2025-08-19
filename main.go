@@ -15,6 +15,14 @@ func main() {
 	example = &oi
 	fmt.Printf("oi %d", *example)
 
+	s := ""
+	for s != "aaaaa" {
+
+		fmt.Println("Value of s:", s)
+		s = s + "a"
+
+	}
+
 }
 
 /*
@@ -555,6 +563,129 @@ func Season(month int) string {
 
 De fato apesar de ter a mesma lógica, poderia ter melhorado visualmente o meu código.
 
+15. For
+	Provavelmente uma das mais importantes estruturas de controle na programação, o laço for.
+Temos dois tipos de laço for:
+	- iteração por contador
+	- iteração por condicional
+
+15.1. Iteração por contador:
+	Aqui é a mais que habituado, dá até uma nostalgia rever esses assuntos como um principiante (em GO eu sou um principante, não tenho de ser
+arrogante assim). TUdo consiste na seguinte estrutura:
+	for inicialização; condição; modificação {}
+
+Por exemplo:
+	for i := 0; i < 5; i++ {}
+
+E também podemos usar mais de um contador:
+
+for i, j := 0, N; i < j; i, j = i+1, j-1 {}
+
+15.2. Iteração por condição
+	Aqui é bem mais simples, o exemplo diz por si só:
+
+	var i int = 0
+
+	for i < 5 {
+		i = i + 5
+	}
+
+15.3. uso com intervalo, for range
+	for range é uma construção iteradora em GO (por favor, se alguém ler isso, é fundamental saber o que é iteração),
+uma variação interessante para criar um loop sobre cada item de uma coleção
+Exemplo geral:
+
+for ix, val := range coll {}
+
+Explicando por outras linhas ,ele consegue percorrer facilmente variaveis com strings e imprimir o index de cada, como se fosse um array.
+Codigo:
+
+str3 := "Vinicius Aarao"
+    for pos, char := range str3 {
+        fmt.Printf("Minha letra %c na posição %d\n", char, pos)
+    }
+
+15.4. Break e continue
+	Break encerra o loop condicional, indi para fora do loop.
+
+for i:=0; i<3; i++ {    // outer loop
+        for j:=0; j<10; j++ {   // inner loop
+            if j>5 {
+                break                   // breaking inner loop
+            }
+            fmt.Printf("%d",j)
+        }
+        fmt.Printf(" ")
+    }
+
+esse exemplo é perfeito, só peguei do autor discarado.
+
+	Já continue é exatamente o oposto, mesmo que a condição seja satisfeita, ele continua dentro do corpo do loop.
+
+for i := 0; i < 10; i++ {     // for loop
+        if i == 5 {
+            continue                      // continuing the loop
+        }
+        fmt.Printf("%d",i)
+        fmt.Print(" ")
+    }
 
 
+16. Labels - goto
+	rótulo é um sequencia de caracteres que identifica um local dentro de um código. Uma linha de código que começa
+com for, switch ou select, pode ser precedida por um label no seguinte formato:
+
+IDENTIFICADOR:
+
+// restante do código
+
+Um exemplo do uso de label:
+
+LABEL1:
+for i := 0; i <= 5; i++ {
+	for j := 0; j <= 5; j++ {
+		if j == 4 {
+			continue LABEL1
+		}
+		fmt.Printf("i = %d\n, j = %d\n, i, j)
+	}
+}
+
+Existe também o goto, nada mais é do que o go to here:
+
+    i:=0
+    HERE:           // adding a label for a location
+    fmt.Printf("%d",i)
+    i++
+    if i==5 {
+        return
+    }
+    goto HERE      // goto HERE
+
+MINI-CHALLENGE
+
+Crie um programa que simule uma transação bancária com tratamento de erros e etapas de transação claras, facilitando a transferência de fundos entre duas contas. Este programa deve aceitar o valor da transferência, o saldo da conta de origem e o saldo da conta de destino como parâmetros.
+
+Implemente uma função chamada transferFundsque manipula corretamente o seguinte:
+
+Verificar saldo: Verifique se a conta de origem tem saldo suficiente para a transferência. Caso contrário, trate os erros de saldo insuficiente com cuidado.
+Atualizar saldo: deduza o valor da transferência do saldo da conta de origem e adicione-o ao saldo da conta de destino.
+Conclusão: marque a conclusão bem-sucedida da transação.
+
+type Account struct {
+    ID      int
+    Balance float64
+}
+
+func transferFunds(amount float64, source *Account, destination *Account) {
+    if amount > source.Balance {
+        fmt.Println("Saldo Insuficiente")
+    } else {
+        source.Balance -= amount
+        destination.Balance += source.Balance
+        fmt.Printf("Saldo atual: %f", source.Balance)
+    }
+}
+
+Eu não detalhei muito mas, essa foi minha solução.
 */
