@@ -8,15 +8,12 @@ import "fmt"
 func main() {
 	PrintMessage("ola")
 	fmt.Println(toFahrenheit(32))
-	var str string = "Eu"
 
 	var oi = 5
 
 	var example *int
 	example = &oi
-	fmt.Printf("oi %p", example)
-
-	fmt.Println(len(str))
+	fmt.Printf("oi %d", *example)
 }
 
 /*
@@ -326,7 +323,35 @@ var oi = 5
 fmt. Printf("Isso é um numero %d, e está localizado aqui %p", oi, &oi)
 
 Para declarar uma variável como um ponteiro, faremos da seguinte forma
-var example *int
+var example * int
 example = &oi
 printf("%d", example)
+
+Existe uma recomendação de deixarmos sempre a expressão de ponteiro da seguinte forma
+
+var p * type
+
+Ou seja, separado o asterisco, pois, evita em contextos complexos a confusão com multiplicação.
+E tem um detalhe muito interessante que em GO, ao contrário de C por exemplo, não podemos realizar aritmética de ponteiros,
+que causa erros tremendos de memória em C, o que torna Golang seguro.
+
+
+12. if-else
+	Aqui estou habituado mais que nunca, porém tem um detalhe em Go, uma completa omissão de parênteses.
+Temos 3 estruturas:
+	if-else
+	switch-case
+	select
+Além disso, podemos dar um breack, ou continue. E ir além, dando um goto, para pular uma instrução.
+
+Exemplo classico, se um numero é par ou impar
+
+num1 := 3
+
+    if num1 % 2 != 0 {
+    	fmt.Printf("%d é impar", num1)
+    } else {
+    	fmt.Printf("%d é par", num1)
+    }
+
 */
