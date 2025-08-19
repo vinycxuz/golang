@@ -461,6 +461,100 @@ func main() {
     }
 }
 
+14. Switch-case
+	Aqui é da mesma forma, até o momento sem misterio.
+
+switch var1 {
+case val1:
+
+case val2:
+
+default:
+
+}
+
+Se eu quiser que seja executado outro case mesmo de valor diferente, eu posso utilizar fallthrough
+
+E se formos atribuir algo em switch, utilizamos o pontoe virgula:
+
+ switch num1 := 100;{
+        case num1 < 0:
+            fmt.Println("Number is negative")
+
+        case num1 > 0 && num1 < 10:
+            fmt.Println("Number is between 0 and 10")
+
+        default:
+            fmt.Println("Number is 10 or greater")
+    }
+
+Challenge: Season of a Month
+This lesson brings you a challenge to solve.
+
+Problem statement
+Write a function Season that has as input-parameter of a month number and which returns the name of the season to which this month belongs (disregard the day in the month). Make sure you follow the following criteria of month names and their values:
+
+svg viewer
+
+January: 1
+February: 2
+March: 3
+April: 4
+May: 5
+June: 6
+July: 7
+August: 8
+September: 9
+October: 10
+November: 11
+December: 12
+Another thing to note is the seasons of the months. Look at the following mapping:
+
+Winter: 1, 2, and 12
+Spring: 3, 4, and 5
+Summer: 6, 7, and 8
+Autumn: 9, 10, and 11
+Input
+An int variable
+
+Output
+A string variable
+
+
+Meu código solução foi:
+
+func Season(month int) string {
+  switch month{
+    case 1, 2, 12:
+      return "Winter"
+
+    case 3, 4, 5:
+      return "Spring"
+
+    case 6, 7, 8:
+      return "Summer"
+
+    case 9, 10, 11:
+      return "Autumn"
+  }
+  return "Season unknown"
+}
+
+A resposta do autor foi:
+
+func Season(month int) string {
+	switch month {  // switch on the basis of value of the months(1-12)
+		case 12,1,2:  return "Winter"  // Jan, Feb and Dec have winter
+		case 3,4,5:	  return "Spring"  // March, Apr and May have spring
+		case 6,7,8:   return "Summer"  // June, July and Aug have summer
+		case 9,10,11: return "Autumn"  // Sept, Oct and Nov have autumn
+
+		default: return "Season unknown"         //value outside [1,12], then season is unkown
+	}
+}
+
+De fato apesar de ter a mesma lógica, poderia ter melhorado visualmente o meu código.
+
 
 
 */
