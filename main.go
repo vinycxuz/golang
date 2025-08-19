@@ -14,6 +14,7 @@ func main() {
 	var example *int
 	example = &oi
 	fmt.Printf("oi %d", *example)
+
 }
 
 /*
@@ -353,5 +354,113 @@ num1 := 3
     } else {
     	fmt.Printf("%d é par", num1)
     }
+
+As condicionais são do tipo boolean, então temos alguns bons exemplos do que funciona:
+
+if true {
+	// faça algo
+}
+
+if !bool1 // faça algo
+
+if !(x == y) ou if x != y
+
+Quando queremos retornar isso ou aquilo, podemos omitir o else:
+
+if condição {
+	return x
+}
+return y
+
+Também podemos simplificar algumas coisas
+
+if num1 := 5; num1 > 4 {
+	// faça algo
+}
+
+exemplos mais completo com vários tipos:
+
+var first int = 10
+    var cond int
+    if first <= 0 {
+        fmt.Printf("first is less than or equal to 0\n")
+    } else if first > 0 && first < 5 {
+        fmt.Printf("first is between 0 and 5\n")
+    } else {
+        fmt.Printf("first is 5 or greater\n")
+    }
+    if cond = 5; cond > 10 {
+        fmt.Printf("cond is greater than 10\n")
+    } else {
+        fmt.Printf("cond is not greater than 10\n")
+    }
+
+13. Testando erros com funções
+	Aqui, temos uma estrutura que confesso não lembrar ter vista antes. Para analisarmos
+um success ou err, usaremos a seguinte estrutura como exemplos:
+
+anInt, erre = strconv.Atoi(str)
+
+Nesse caso, se str não puder ser convertido para int, será retornado 0 para anInt e erro absorve error.
+
+Segue um exemplo completo que, quando imprimimos a variavel err, ela tem a seguinte mensagem:
+
+"strconv.ParseInt: parsing "ABC": invalid syntax"
+
+codigo:
+	var orig string = "ABC"
+    var an int
+    var err error
+    // storing integer and error information
+    an, err = strconv.Atoi(orig)
+
+    if err != nil { // if it was an error, discontinue
+        fmt.Printf("orig %s is not an integer - exiting with error\n", orig)
+        fmt.Println(err)
+        return
+    }
+    fmt.Printf("The integer is %d\n", an)
+
+Outro exemplo com vários tratamentos de erros:
+
+import (
+    "fmt"
+    "errors"
+)
+
+// Factorial calculates the factorial of a non-negative integer n.
+// It returns 0 as the factorial value if n is negative.
+func Factorial(n int) (int, error){
+    if n < 0 {
+        return 0, errors.New("fatorial não pode ser negativa.")
+    }
+
+    if n == 0 {
+        return 1, nil   // Factorial of 0 is 1
+    }
+
+    factorial := 1
+    for i := 1; i <= n; i++ {
+        factorial *= i
+    }
+
+    return factorial, nil
+}
+
+func main() {
+    n := 10
+    x := -10
+
+    result, err := Factorial(n)
+    if err == nil {
+        fmt.Printf("Factorial of %d is %d\n", n, result)
+    }
+    result, err = Factorial(x)
+    if err == nil {
+        fmt.Printf("Factorial of %d is %d\n", x, result)
+    }
+}
+
+
 
 */
