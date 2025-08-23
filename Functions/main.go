@@ -154,4 +154,19 @@ func main() {
     closeFile(file)
     fmt.Println("File processed successfully.")
 }
+
+
+
+3. Built-in functions
+	Existem algumas funções integradas que podem ser usadas sem importar pacotes, como por exemplo:
+
+close
+len (entrega o comprimento de vários tipos)
+cap (capacidade maxima de armazenamento com maps e slices)
+new e make (alocar memória)
+
+entre outras que serão estudadas mais a frente
+
+4. Funções recursivas
+
 */
