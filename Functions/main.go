@@ -168,5 +168,56 @@ new e make (alocar memória)
 entre outras que serão estudadas mais a frente
 
 4. Funções recursivas
+	Funções recursivas são funções que chamam a si mesmas
+
+package main
+import (
+	"fmt"
+)
+
+func main() {
+	for i := uint64(0); i < uint64(22); i++ {
+		fmt.Printf("Factorial of %d is %d\n", i, Factorial(i)) // calculating factorial of first 21 integers
+	}
+}
+
+// named return variables:
+func Factorial(n uint64) (fac uint64) {
+	if n<=1{ 	//base case
+		return 1
+	}
+	fac = n * Factorial(n-1)	// recursive case
+	return
+}
+
+5. Funções de ordem superior e funções como parâmetro
+	Você pode passar um valor de uma função para uma variavel da seguinte forma:
+
+func inc1(x int) int { return x + 1 }
+
+f1 := inc1
+
+Umas das coisas que podemos fazer é passar uma função como parâmetro. A priori, me questionei como poderia usar. E foi rapidamente:
+Exemplo:
+
+func main() {
+    callback(1, Add) // function passed as a parameter
+}
+
+func Add(a, b int) {
+    fmt.Printf("The sum of %d and %d is: %d\n", a, b, a + b)
+}
+
+func callback(y int, f func(int, int)) {
+    f(y, 2) // this becomes Add(1, 2)
+}
+
+
+6. Closures
+	As vezes não precisamos nomear algumas funções (não sei se concordo), e podemos atribuir uma função a uma variável para não precisar nomea-la:
+
+soma := func (a, b int) int { return a + b }
+
+
 
 */
