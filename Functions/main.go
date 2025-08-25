@@ -218,6 +218,8 @@ func callback(y int, f func(int, int)) {
 
 soma := func (a, b int) int { return a + b }
 
+podemos depurar com closures também utilizando runtime w where
+
 
 
 */
