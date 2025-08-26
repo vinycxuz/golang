@@ -218,8 +218,34 @@ func callback(y int, f func(int, int)) {
 
 soma := func (a, b int) int { return a + b }
 
-podemos depurar com closures também utilizando runtime w where
+Podemos depurar com closures também utilizando pacotes runtimes e logs, e isso se torna muito útil para saber qual função está sendo executada.
+Utilizando o pacote runtime para pegar as informações.
 
+where := func() {
+	_, file, line, _ := runtime.Caller(1)
+	log.Printf("%s:%d", file, line)
+	}
+where()
 
+where()
 
+vocÊ tem uma sapida semelhante a isso:
+2025/08/26 00:36:27 /usercode/main.go:11
+2025/08/26 00:36:27 /usercode/main.go:14
+2025/08/26 00:36:27 /usercode/main.go:19
+
+Ou utilizando .log como já foi visto anteriormente.
+
+7. Optimizing programs
+	Podemos cronometrar o tempo de execução de determinado cálculo utilizando Now() do pacote time. E então calcular a diferenã entre eles,
+utilizando Sub().
+
+func Calculation(){
+	for i:= 0; i < 1000; i++ {
+		fmt.Println("oi")
+	}
+	start := time.Now()
+	Calculation()
+	end := time.Now()
+	delta := end.Sub(start)
 */
