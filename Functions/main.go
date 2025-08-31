@@ -276,5 +276,62 @@ func main() {
   fp(&ar) // passes a pointer to ar
 }
 
+Existe algumas variantes para especificar diferentes tamanhos do array.
+
+var arrAge = [5]int{29, 12, 44, 25, 40}
+
+A segunda variante é quando o compilador precisará contar quantos itens tem no array:
+
+var arrAge2 = [...]int{23, 67}
+
+E podemos criar chave:valor padrão, muito conhecido na programação:
+
+var arrAge3 = [...]string{3: "eu:, "4": ela}
+
+9. Slices
+	Slices são referências a um segmento de código de um array. Slices na memória é uma estrutura com 3 campos:
+	- ponteiro para a matriz subjacente
+	- comprimento do slice
+	- capacidade do slice
+
+Ele obviamente precisa de um array subjacente para existir. A declaração se dá por:
+
+var identifier []type
+
+ou
+
+var slice1 []type = arr1[start:end]
+
+Se eu atribuir um array completo para um slice, também posso escrever:
+
+var slice1 []type = arr1[:]
+
+Para pegar fatias do array com valores especificos, podemos utilizar:
+
+s := [3]int{1,2,3}[:]
+
+Também podemos criar slice com make()
+
+var slice1 []type = make([]type, len)
+no caso:
+
+slice := make([]int, 10)
+
+Utilizamos new() em tipos de valor como matrizes e estruturas enquanto make() retorn um valor inicializado. Resumindo, new aloca e make cria.
+
+9.1. Bytes e Slices
+	Slices of bytes é tão comum no GO que tem um pacote para manipular funções. Além de conter algo muito útil chamado BUffer:
+
+Buffer pode ser criado como uma variável:
+
+var buffer bytes.Buffer
+
+um ponteiro:
+
+var r *bytes.Buffer = new(bytes.Buffer)
+
+ou uma função:
+
+func NewBuffer (buf []byte) *Buffer
 
 */
