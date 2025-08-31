@@ -248,4 +248,33 @@ func Calculation(){
 	Calculation()
 	end := time.Now()
 	delta := end.Sub(start)
+
+8. Array
+	Array não é tão utilizado quanto slice em GO, diz-se que raramente se vê. Mas vamos aprender,
+a sintaxe:
+
+var arr1 [10]int
+
+E podemos:
+
+arr1[2] = 99
+
+TAmbém podemos declarar um array com new(), lembrando que ele tem zero de espaço alocado e retorna o endereço,
+logo, ficaria algo assim:
+
+var arr2 = new([5]int)
+
+Exemplo:
+
+func f(a [3]int) { fmt.Println(a) }   // accepts copy
+
+func fp(a *[3]int) { fmt.Println(a) } // accepts pointer
+
+func main() {
+  var ar [3]int
+  f(ar) // passes a copy of ar
+  fp(&ar) // passes a pointer to ar
+}
+
+
 */
