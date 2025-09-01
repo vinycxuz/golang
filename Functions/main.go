@@ -334,4 +334,87 @@ ou uma função:
 
 func NewBuffer (buf []byte) *Buffer
 
+9.2. Copy and Append
+
+Podemos copiar uma slice ou acrescentar valores:
+
+func copy(dst, src[]T) int
+
+10. Relacionando strings, arrays e slices
+
+	Podemos criar um slice de bytes a partir de uma string atribuindo ou usando método copy()
+
+c := []byte(str)
+
+copy(dst[]byte, str)
+
+	Assim como podemos também anexar uma string a um slice de byte
+
+var b []byte
+var str string
+b = append(b, str)
+
+10.1. Criando uma substring de uma string
+	substr := str[inicio:fim]
+
+10.2. Alterar o caracter de uma string
+	Para alterar o caracter de uma string, transformamos em um array de bytes e após isso alterar aquele índice
+
+s := "opa"
+c := []byte(s)
+c[1] = 'l'
+str := string(c)
+
+10.3. Operações com append
+
+a) para atribuir um slice no outro
+	a = append(a, b...)
+b) para deletar um item no index i:
+	a = append(a[:i], a[i+1:]...)
+c) para cortar de i até j
+	a = append(a[:i], a[j:]...)
+d) para extender um slice a um novo tamanho j
+	a = append(a, make([]T, j)...)
+e) para inserir um item x no index i:
+	a = append(a[:i], append([]T{x}, a[i:]...)...)
+f) para inserir um novo slice de tamanho j até i:
+	a = append(a[:i], append([]T, j), a[i:]...)...)
+g) para retirar o elemento mais alto da pilha:
+	x, a = a[len(a)-1], a[:len(a)-1]
+
+
+11. Maps
+	Para declarar um map, faremos:
+
+var map1 map[keyvalue]valuetype
+
+var map1 map[string]int
+
+para atribuir um valor da seguinte forma
+
+map1[key] = val1
+
+para atribuir um valor do mapa a uma variável:
+
+v := map1[key]
+
+Exemplo mais robusto:
+
+mapLit := map[string]int{"one": 1, "two": 2}   // making map & adding key-value pair
+  var mapAssigned map[string]int
+  mapCreated := make(map[string]float32)        // making map with make()
+  mapAssigned = mapLit
+  mapCreated["key1"] = 4.5      // creating key-value pair for map
+  mapCreated["key2"] = 3.14159
+  mapAssigned["two"] = 3        // changing value of already existing key
+  fmt.Printf("Map literal at \"one\" is: %d\n", mapLit["one"])
+  fmt.Printf("Map created at \"key2\" is: %f\n", mapCreated["key2"])
+  fmt.Printf("Map assigned at \"two\" is: %d\n", mapAssigned["two"])
+  fmt.Printf("Map literal at \"ten\" is: %d\n", mapLit["ten"])
+
+Mesmo crescendo dinamicamente, podemos colocar um valor máximo fixo para o map.
+
+map2 := make(map[string]int, 100)
+
+11.1.
 */
