@@ -416,5 +416,132 @@ Mesmo crescendo dinamicamente, podemos colocar um valor máximo fixo para o map.
 
 map2 := make(map[string]int, 100)
 
-11.1.
+11.1. Verificar a existencia de uma key
+	Para verificarmos, utilizamos um retorno bolean:
+
+val1, isPresent = map1[key]
+
+Para verificar a presença de uma chave e não se importar com o valor, podemos:
+
+_, ok := map1[key]
+
+ou com um if
+
+if -, ok := map1[key]; ok {}
+
+
+para deletar, basta usar a palavra reservada delete
+
+delete(map1, key1)
+
+
+Challenge
+Problem statement
+Make a map to hold together the number of days in a week (1 -> 7) with its name. Make sure to follow the following key-value pair pattern (KEY: VALUE):
+
+1: Monday
+2: Tuesday
+3: Wednesday
+4: Thursday
+5: Friday
+6: Saturday
+7: Sunday
+Then write a function that takes a key and returns the value associated with it. If a non-existent key is given, the function should return the message: Wrong Key.
+
+Minha solução:
+
+var Days = map[int]string{1:"Monday",2:"Tuesday",3:"Wednesday",4:"Thursday",5:"Friday",6:"Saturday",7:"Sunday"} // do initialization here
+
+func findDay(n int) string {
+	if _, key := Days[n]; key {
+	    return Days[n]
+	}
+	return "Wrong Key"
+}
+
+11.2. Slice de Maps
+	Podemos criar um slice para maps, e aqui vale verificar apenas como acessar aca item de cada map:
+
+// Version A:
+  items := make([]map[int]int, 5)
+  for i := range items {
+    items[i] = make(map[int]int, 1)
+    items[i][1] = 2 // This 'item' data will not be lost on the next iteration
+  }
+  fmt.Printf("Version A: Value of items: %v\n", items)
+
+
+  // Version B: NOT GOOD!
+
+  items2 := make([]map[int]int, 5)
+  for _, item := range items2 {
+    item = make(map[int]int, 1) // item is only a copy of the slice element.
+    item[1] = 2 // This 'item' will be lost on the next iteration.
+  }
+  fmt.Printf("Version B: Value of items: %v\n", items2)
+}
+
+11.3. Ordenando e invertendo maps
+	Podemos usar o sort package para ordenar um map através de um slice, um map por si só não pode ser ordenado diretamente.
+Para ordenar, devemos:
+	- copiar as chaves para um slice,
+	- ordenar e
+	- imprimir as chaves com for-range.
+
+package main
+import (
+    "fmt"
+    "sort"
+)
+
+var (
+    barVal = map[string]int{"alpha": 34, "bravo": 56, "charlie": 23, "delta": 87,
+    "echo": 56, "foxtrot": 12, "golf": 34, "hotel": 16, "indio": 87, "juliet": 65, "kilo":
+    43, "lima": 98}
+)
+
+func main() {
+    fmt.Println("unsorted:")
+    for k, v := range barVal {
+        fmt.Printf("key: %v, value: %v / ", k, v)   // read random keys
+    }
+    keys := make([]string, len(barVal))     // storing all keys in separate slice
+    i := 0
+    for k := range barVal {
+        keys[i] = k
+        i++
+    }
+    sort.Strings(keys)  // sorting the keys slice
+    fmt.Println()
+    fmt.Println("\nsorted:")
+    for _, k := range keys {
+        fmt.Printf("key: %v, value: %v / ", k, barVal[k])   // reading key from keys and value from barVal
+    }
+}
+
+E para inverter:
+
+package main
+import (
+"fmt"
+)
+
+var (
+barVal = map[string]int{"alpha": 34, "bravo": 56, "charlie": 23, "delta": 87,
+"echo": 56, "foxtrot": 12, "golf": 34, "hotel": 16, "indio": 87, "juliet": 65, "kilo": 43,
+"lima": 98}
+)
+
+func main() {
+  invMap := make(map[int]string, len(barVal)) // interchanging types of keys and values
+  for k, v := range barVal {
+    invMap[v] = k   // key becomes value and value becomes key
+  }
+  fmt.Println("inverted:")
+  for k, v := range invMap {
+    fmt.Printf("key: %v, value: %v / ", k, v)
+  }
+}
+
+
 */
