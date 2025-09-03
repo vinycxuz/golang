@@ -2,26 +2,63 @@ package main
 
 import "fmt"
 
-//TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
+// TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
 // the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
 
 func main() {
 	PrintMessage("ola")
 	fmt.Println(toFahrenheit(32))
 
-	var oi = 5
+	example := &ListNode{1, &ListNode{1, &ListNode{3, nil}}}
+	example2 := &ListNode{2, &ListNode{3, &ListNode{4, nil}}}
 
-	var example *int
-	example = &oi
-	fmt.Printf("oi %d", *example)
+	example3 := mergeTwoLists(example, example2)
 
-	s := ""
-	for s != "aaaaa" {
+	imprimirList(example3)
+}
 
-		fmt.Println("Value of s:", s)
-		s = s + "a"
-
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+	endList := new(ListNode)
+	head := endList
+	for list1 != nil && list2 != nil {
+		if list1.Val <= list2.Val {
+			head.Next = list1
+			list1 = list1.Next
+		} else {
+			head.Next = list2
+			list2 = list2.Next
+		}
+		head = head.Next
 	}
+	if list1 != nil {
+		head.Next = list1
+	}
+	if list2 != nil {
+		head.Next = list2
+	}
+	return endList.Next
+}
+
+func imprimirList(list *ListNode) {
+	atual := list
+	for atual != nil {
+		fmt.Printf("%d", atual.Val)
+		atual = atual.Next
+	}
+	fmt.Println("nil")
+}
+
+func singleNumber(nums []int) int {
+	aux := 0
+	for _, value := range nums {
+		aux ^= value
+		fmt.Println(aux)
+	}
+	return aux
 
 }
 

@@ -1,7 +1,42 @@
 package Functions
 
-func main() {
+import "fmt"
 
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+func main() {
+	example := &ListNode{1, &ListNode{1, &ListNode{3, nil}}}
+	example2 := &ListNode{2, &ListNode{3, &ListNode{4, nil}}}
+
+	mergeTwoLists(example, example2)
+}
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+	endList := new(ListNode)
+	list11 := list1
+	list22 := list2
+	for list11 != nil {
+		if list11.Val <= list22.Val {
+			endList.Val = list11.Val
+			endList.Next = list22
+		} else {
+			endList.Val = list22.Val
+			endList.Next = list11
+		}
+	}
+	imprimirList(endList)
+	return endList
+}
+
+func imprimirList(list *ListNode) {
+	atual := list
+	for atual != nil {
+		fmt.Printf("%d", atual.Val)
+		atual = atual.Next
+	}
+	fmt.Println("nil")
 }
 
 /*
@@ -543,5 +578,95 @@ func main() {
   }
 }
 
+12. Struct
+	O geral para struct é:
+type identificador struct {
+	field1 type1
+	field2 type2
+	...
+}
 
+tambem podemos simplificar da seguinte forma:
+
+var exemplo Exemplo
+
+Para declarar um ponteiro para uma struct, utilizamos new():
+
+var t *T = new(T)
+
+Para obter o valor de uma struct, basta usarmos ponto entre a struct e o campo:
+
+exemplo.name = value
+
+Exemplo maior com tudo:
+
+type exemplo struct {
+	age int
+	weight float
+	name string
+}
+
+func main (){
+	ms := nem(Exemplo)
+	ms.age = 25
+	ms.weight = 73.5
+	ms.name = "Eu"
+}
+
+Outra forma de atribuir é utilizando chaves:
+
+exemplo1 := exemplo{ 73, 25, "Eu" }
+
+Exemplo com parâmetros:
+
+type Person struct {  // struct definition
+  firstName string
+  lastName string
+}
+
+func upPerson (p *Person) { // function using struct as a parameter
+  p.firstName = strings.ToUpper(p.firstName)
+  p.lastName = strings.ToUpper(p.lastName)
+}
+
+func main() {
+  // 1- struct as a value type:
+  var pers1 Person
+  pers1.firstName = "Chris"
+  pers1.lastName = "Woodward"
+  upPerson(&pers1)
+  fmt.Printf("The name of the person is %s %s\n", pers1.firstName, pers1.lastName)
+
+  // 2 - struct as a pointer:
+  pers2 := new(Person)
+  pers2.firstName = "Chris"
+  pers2.lastName = "Woodward"
+  (*pers2).lastName = "Woodward" // this is also valid
+  upPerson(pers2)
+  fmt.Printf("The name of the person is %s %s\n", pers2.firstName, pers2.lastName)
+
+  // 3 - struct as a literal:
+  pers3 := &Person{"Chris","Woodward"}
+  upPerson(pers3)
+  fmt.Printf("The name of the person is %s %s\n", pers3.firstName, pers3.lastName)
+}
+
+
+12.1. Conceitos avançados com struct
+	Alguns exemplo de estrutura de dados com estruturas:
+
+- Lista e duplamente encadeada
+
+type Node struct {
+	data float64
+	next *Node
+}
+
+type Node struct {
+	left *Node
+	inf float64
+	right *Node
+}
+
+Se tivermos uma estrutura e quisermos definir um tamanho para ele, podemos utilizar Sizeof()
 */
