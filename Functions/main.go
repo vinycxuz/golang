@@ -735,5 +735,38 @@ func (tn *TwoInts) AddToParam(param int) int {
 	return tn.a + param
 }
 
+Outro exemplo simples:
+
+package main
+import "fmt"
+import "strconv"
+import "encoding/json"
+
+type Rectangle struct { // struct of type Rectangle
+    length, width int
+}
+
+func (r *Rectangle) Area() int {    // method calculating area of rectangle
+    return r.length * r.width
+
+}
+
+func (r *Rectangle) Perimeter() int { // method calculating perimeter of rectangle
+    return 2 * r.length + 2 * r.width
+}
+
+Informação interessante é que quando usando um metodo para alterar o valor interno de uma estrutura, não usamos return:
+Exemplo
+
+type employee struct {
+    salary float32
+}
+
+func incremenetSalary(a* employee) increment(s float32) {
+    a.salary += a.salary * s
+}
+
+
+
 
 */
