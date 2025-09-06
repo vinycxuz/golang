@@ -669,4 +669,71 @@ type Node struct {
 }
 
 Se tivermos uma estrutura e quisermos definir um tamanho para ele, podemos utilizar Sizeof()
+
+Além disso, podemos criar função de estrutura anônima, sem a necessidade de identificadores globais, extremamente util em escopo reduzido e não precisa
+se exposto pelo resto do programa.
+
+Segue exemplos com campos anônimos e com estrutura anonima:
+
+type C struct {
+	a int
+	int
+	string
+}
+
+func main() {
+
+	var person struct {
+		name string
+		age  int
+	}
+
+	person.name = "Chris"
+	person.age = 25
+
+	anotherPerson := struct {
+		name string
+		age  int
+	}{
+		name: "Chris",
+		age:  25,
+	}
+
+13. Métodos
+	Semelhante ao conceito de POO, aqui método é uma função que atua sobre uma variável de um
+determinado type, chamado de receiver.
+
+Exemplo:
+
+func (a *denseMatrix) Add (b Matrix) Matrix
+
+A forma geral para criar um método é:
+
+func (recv receiver_type) method _name(parameter_list) (return_value_list) { ...}
+
+Exemplos completo:
+
+type TwoInts struct {
+	a int
+	b int
+}
+
+func main() {
+	two1 := new(TwoInts)
+ 	two1.a = 12
+	two1.b = 10
+	fmt.Printf("The sum is %d", two1.AddThem())
+	two2 := TwoInts{3, 4}
+	fmt.Printf("The sum is %d", two2.AddThem())
+}
+
+func (tn *TwoInts) AddThem() int {
+	return tn.a + tn.b
+}
+
+func (tn *TwoInts) AddToParam(param int) int {
+	return tn.a + param
+}
+
+
 */
