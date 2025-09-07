@@ -899,5 +899,13 @@ func main () {
 
 Aprofundamento de OOP em Go: https://github.com/lanl/goop
 
+14. Garbage Collection and SetFinalizer
+	O Go faz uma execução separada no tempo de realizar uma coleta de variáveis não listadas e libera essa memória.
+Essa funcionalidade pode ser acessada por meio do pacote runtime., explicitamente invocando a função runtime.GC()
+
+Para saber o uso de memória por exemplo usamos:
+
+ ms := runtime.MemStats{}
+runtime.ReadMemStats(&ms)
 
 */
