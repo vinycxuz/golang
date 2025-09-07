@@ -766,7 +766,138 @@ func incremenetSalary(a* employee) increment(s float32) {
     a.salary += a.salary * s
 }
 
+13.1. Métodos getters setters
+	Para usar o metodo setter, usamos o prefixo set() e para get, apenas o nome do campo.
+Exemplo completo:
 
+import (
+"fmt"
+"person"
+)
+
+func main() {
+	p := person.Person{
+		FirstName: "John",
+		LastName:  "Doe",
+	}
+
+	p.SetFirstName("Jane")
+	fmt.Println(p.FirstName())
+}
+
+13.2. Métodos de tipos embutidos
+	É muito semelhante a herança de métodos:
+
+
+type Engine struct {
+	Start()
+	Stop()
+}
+
+type Car struct {
+	Engine
+	Speed int
+}
+
+e faríamos o construct da seguinte forma:
+
+func (c *Car) GoToWorkIn {
+	c.start()
+	c.Stop()
+}
+
+Um exemplo mais elaborado:
+
+package main
+import (
+"fmt"
+)
+
+type Log struct {
+    msg string
+}
+
+type Customer struct {
+    Name string
+    log *Log
+}
+
+func main() {
+    c := new(Customer)
+    c.Name = "Barack Obama"
+    c.log = new(Log)
+    c.log.msg = "1 - Yes we can!"
+    // shorter:
+    c = &Customer{"Barack Obama", &Log{"1 - Yes we can!"}}
+    fmt.Println(c.log)
+    c.Log().Add("2 - After me, the world will be a better place!")
+    fmt.Println(c.Log())
+}
+
+func (l *Log) Add(s string) {
+    l.msg += "\n" + s
+}
+
+func (l *Log) String() string {
+    return l.msg
+}
+
+func (c *Customer) Log() *Log {
+    return c.log
+}
+
+E com função anonima, basta alterar na estrutura e na atribuição para a variável.:
+
+package main
+import (
+"fmt"
+)
+
+type Log struct {
+  msg string
+}
+
+type Customer struct {
+  Name string
+  Log
+}
+
+func main() {
+  c := &Customer{"Barack Obama", Log{"1 - Yes we can!"}}
+  c.Add("2 - After me, the world will be a better place!")
+  fmt.Println(c)
+  }
+
+func (l *Log) Add(s string) {
+  l.msg += "\n" + s
+}
+
+func (l *Log) String() string {
+  return l.msg
+}
+
+func (c *Customer) String() string {
+  return c.Name + "\nLog:\n" + fmt.Sprintln(c.Log)
+}
+
+13.3. Multiplas heranças
+	Para realizar multiplas heranças, basta ter a necessidade dos tipos pai na compilação:
+
+type Phone struct {
+	return "bere bere"
+}
+
+type Smartphone struct {
+	Phone
+}
+
+func main () {
+	c := new(Smartphone)
+	fmt.Println(c.Phone())
+}
+
+
+Aprofundamento de OOP em Go: https://github.com/lanl/goop
 
 
 */
