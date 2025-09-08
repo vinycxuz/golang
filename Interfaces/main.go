@@ -235,4 +235,66 @@ func main() {
 	var r RSimple
 	fmt.Println(fI(&r))
 }
+
+Próximo desafio concluído com sucesso, aonde tem comentário era aonde eu devera implementar
+
+
+package main
+import "fmt"
+
+type Square struct {
+	side float32
+}
+
+type Triangle struct {	// implement this struct
+	side float32
+	width float32
+}
+
+type AreaInterface interface {
+	Area() float32
+}
+
+type PeriInterface interface { // implement this interface
+	Perimeter() float32
+}
+func main() {
+	var periIntf PeriInterface
+	var areaIntf AreaInterface
+	sql := new(Square)
+	trl := new(Triangle)
+	sql.side = 5
+	trl.side = 6
+	trl.width = 3
+	areaIntf = trl
+	periIntf = sql
+
+	if t, ok := areaIntf.(*Triangle); ok {
+	    fmt.Println(t.Area())
+	}
+	if t, ok := periIntf.(*Square); ok {
+	    fmt.Println(t.Perimeter())
+	} else {
+	    fmt.Println("It isn't nothing")
+	}
+}
+
+func (sq *Square) Area() float32 {
+	return sq.side * sq.side
+}
+
+func (sq *Square) Perimeter() float32 { // implement method called on square to calculate its perimeter
+	return sq.side * 4
+}
+
+func (tr *Triangle) Area() float32 { // implement method called on triangle to calculate its area
+	return tr.side * tr.width * 0.5
+}
+
+1.3.
+
+2. Read and Write
+	Escrita e leitura são absolutamente tudo nos softwares, seja em arquivos, buffers, fluxos de entrada e saída,
+conexões de rede, pipes, entre outros.
+	GO tem uma interface para isso, chamada io.Reader e io.Writer.
 */
