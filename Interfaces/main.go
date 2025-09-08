@@ -291,10 +291,205 @@ func (tr *Triangle) Area() float32 { // implement method called on triangle to c
 	return tr.side * tr.width * 0.5
 }
 
-1.3.
+1.3. Interface vazia
+	A priori pode ser que não faça sentido, mas nada como entender como exemplos, e uma interface vazia é equivalente a 'any' em outras linguagens.
+
+type Anything interface{}
+
+Exemplo com função Lambda:
+
+type SpecialString string
+
+var whatIsThis specialString = "oi"
+
+func TYpeSwitch() {
+	testFUnc := func(any interface()) {
+		switch any.(type) {
+		case string:
+			fmt.Println("string")
+		case int:
+			fmt.Println("int")
+		case SpecialString:
+			fmt.Println("SpecialString")
+		default:
+			fmt.Println("anything")
+		}
+	}
+	testFUnc("oi")
+	testFUnc(1)
+	testFUnc(SpecialString("oi"))
+	testFUnc(1.0)
+}
+
+No caso acima, temos um novo tipo chamado specialString e atribuímos a ele uma string. Utilizamos a interface vazia para
+ler qual o tipo da variável criada.
+
+Com ele, podemos escrever por exemplo a estrutura inicial para uma árvore binária:
+
+type Node struct {
+    left *Node
+    data interface{}
+    right *Node
+}
+
+func NewNode(left, right *Node) *Node {
+    return &Node{left, nil, right}
+}
+
+func (n *Node) SetData(data interface{}) {
+    n.data = data
+}
+
+1.4. Interfaces e dynamic typing
+	Go é a unica que combina valores de interface, verificação de tipo estático, conversão dinâmica em tempo de execução e
+não exige declaração explícita de que um tipo satisfaz uma interface. Tipos que implementam uma interface podem ser passados para qualquer função que receba essa interface
+como argumento.
+	Isso é semelhante à digitação de pato em linguagens dinâmicas como Python e Ruby. Exemplo:
+
+type IDuck interface {
+    Quack()
+    Walk()
+}
+
+func DuckDance (duck IDuck) {
+    for i := 1; i <= 5; i++ {
+        duck.Quack()
+        duck.Walk()
+    }
+}
+
+type Bird struct {
+ // ...
+}
+
+func (b *Bird) Quack() {
+    fmt.Println("Quack!")
+}
+
+func (b *Bird) Walk() {
+    fmt.Println("Walk!")
+}
+
+func main() {
+    b := new(Bird)
+    DuckDance(b)
+}
+
+	Os requisitos de implementação são verificados estaticamente pelo compilador, ou seja, verifica se um tipo implementa
+todas as funções de um interface quando há uma atribuição de uma variável a uma variável dessa interface. Se por exemplo
+tenhamos diferentes entidades representadas como tipos que precisam ser escritas com fluxos XML.
+
+type xmlWriter interface {
+    WriteXML(w io.Writer) error
+}
+
+func StreamXML(v interface{}, w io.Writer) error {
+    if xw, ok := v.(xmlWriter); ok {
+        return xw.WriteXML(w)
+    }
+    return encodeToXML(v, w)
+}
+
+Um exemplo que abrange como estruturas, interfaces e funções de ordem superior interagem entre si:
+
+a. Várias vezes quando se tem uma struct no app, precisamos de uma collection de objetos dessa struct:
+
+type Any interface {}
+
+type Car struct {
+	Model string
+    Manufacturer string
+    BuildYear int
+}
+
+type Cars []*Car
+
+b. E podemos usar o fato de que funções de ordem superior podem ser argumentos para outras funções ao definir a
+funcionalidade necessária em uma interface:
+
+func (cs Cars) Process(f func(car *Car)) {
+    for _, c := range cs {
+        f(c)
+    }
+}
+
+c. Criamos funções para obter subconjuntos e chamar Process() com um fechamento:
+
+func (cs Cars) FindAll(f func(car *Car) bool) Cars {
+    cars := make([]*Car, 0)
+    cs.Process(func(c *Car) {
+        if f(c) {
+            cars = append(cars, c)
+        }
+	})
+    return cars
+}
+
+d. funcionalidade de Map produzindo algo de cada objeto Car:
+
+func (cs Cars) Map(f func(car *Car) Any) []Any {
+    result := make([]Any, 0)
+    ix := 0
+    cs.Process(func(c *Car) {
+        result[ix] = f(c)
+        ix++
+	})
+    return result
+}
+
+e. E agora podemos definir consultas concretas como:
+
+allNewBMWs := allCars.FindAll(func(car *Car) boll {
+    return car.Manufacturer == "BMW" && car.BuildYear > 2010
+})
+
+f. Também podemos retornar funções baseadas em argumentos, talvez queiramos adicionar carros a collection com base
+nos fabricantes por exemplo:
+
+func MakeGroupedAppender(manufacturers []string) (func(car *Car, map[string]Cars) {
+	groupedCars := make(map[string]Cars)
+    for _, m := range manufacturers {
+        groupedCars[m] = make([]*Car, 0)
+    }
+
+	groupedCars["Default"] = make([]*Car, 0)
+
+    appender := func(c *Car) {
+        if _, ok := groupedCars[c.Manufacturer]; ok {
+            groupedCars[c.Manufacturer] = append(groupedCars[c.Manufacturer], c)
+        } else {
+            groupedCars["Default"] = append(groupedCars["Default"], c)
+        }
+	}
+    return appender, groupedCars
+}
+
+manufacturers := []string{"Ford", "Aston Martin", "Land Rover", "BMW", "Jaguar"}
+groupedAppender, sortedCars := MakeGroupedAppender(manufacturers)
+allUngroupedCars.Process(groupedAppender)
+BMWCount := len(groupedCars["BMW"])
+
+1.6. Resumo de Orientação a Objetos em GO
+	Go não possui classes, mas sim interfaces. Dentre os 3 conceitos mais importantes de OOP temos:
+	- Encapsulamento (ocultação de dados): ao contrário de outras linguagens, GO possui apenas dois
+	níveis de acesso, package scope (objeto conhecido somente dentro do pacote, fica em letra minuscula)
+	e exported (objeto é visível fora do seu pacote porque começa com letra maiuscula. Um tipo só pode ter
+	métodos definidos em seu pacote.
+	- Herança: acontece via composição, incorporação de um ou mais tipos com o comportamento desejado.
+	- Polimorfismo: por meio de interfaces nas quais uma variável de um tipo pode ser atribuída a uma variável
+	que qualquer interface implementa.
 
 2. Read and Write
 	Escrita e leitura são absolutamente tudo nos softwares, seja em arquivos, buffers, fluxos de entrada e saída,
 conexões de rede, pipes, entre outros.
-	GO tem uma interface para isso, chamada io.Reader e io.Writer.
+O exemplo abaixo me lembrou muito C:
+
+func main () {
+	var firstName string
+    fmt.Println("Digite seu nome: ")
+	fmt.Scanln(&firstName)
+	fmt.Println("oi %s", firstName)
+}
+
+
 */
