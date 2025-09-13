@@ -491,5 +491,65 @@ func main () {
 	fmt.Println("oi %s", firstName)
 }
 
+para inicializar, basta dar o comando: 'go run main.go'. Também podemos usar o package bufio e os.
+
+var inputReader *bufio.Reader
+var input string
+var err error
+
+func main() {
+  inputReader = bufio.NewReader(os.Stdin)
+  fmt.Println("Please enter some input: ")
+
+  input, err = inputReader.ReadString('\n')
+  if err == nil {
+    fmt.Printf("The input was: %s\n", input)
+  }
+}
+
+3. Error-handling
+	EM GO, não existe um mecanismo de try/catch, acredito que até pela segurança da linguagem e pelo
+fato de ser overrused. Ao invés disso, tem o mecanismo de defer-panic-recover. E fica obviamente a critério
+do dev organizar da melhor forma.
+
+Um exemplo com err function:
+
+if value, err := pack1.Func1(param1); err != nil {
+    fmt.Printf("Error %s in pack1.Func1 with parameter %v", err.Error(), param1)
+	return
+} else {
+	// process
+}
+
+Independente do erro, podemos fazer um error-type com errors.New, exemplo:
+
+package main
+import (
+    "errors"
+    "fmt"
+)
+
+var errNotFound error = errors.New("Not found error")
+
+func main() {
+    fmt.Printf("error: %v", errNotFound)
+}
+// error: Not found error
+
+Exemplo em uma função:
+
+func Sqrt(f float64) (float64, error) {
+	if f < 0 {
+		return 0, errors.News("Não pode ser numero negativo")
+	}
+}
+
+Nessa caso:
+
+if f, err := Sqrt(-1); err != nil {
+	fmt.Printf("Error: %s\n", err)
+}
+
+Também podemos retornar uma espécie de fmt. Printf mas, ao invés disso, usamos fmt.Errorf
 
 */
