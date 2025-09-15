@@ -552,4 +552,121 @@ if f, err := Sqrt(-1); err != nil {
 
 Também podemos retornar uma espécie de fmt. Printf mas, ao invés disso, usamos fmt.Errorf
 
+
+3.1. Runtime e pânico
+	Quando ocorrem erros de execução, o GO aciona panico de execução com um valor do tipo interface runtime.Error.
+Panico também pode ser iniciado diretamente pelo código: quando a condição de erro é tão grave e irrecuperável que
+o programa não consegue continuar.
+
+Exemplo:
+
+func main() {
+	fmt.Println("Hello, world!")
+	panic("panic!")
+}
+
+Após panic, nada mais seria feito caso tivéssemos algo.
+
+Exemplo se estivermos logando com usuário conhecido:
+
+var user = os.Getenv("USER")
+func verifiy() {
+	if user == "" {
+		panic("user not found")
+	}
+}
+
+3.2. Recover()
+	Recover é uma função interna para se recuperar de panico. Ela retorna um valor do tipo interface, que pode ser
+convertido para qualquer tipo desejado. Ela só é util quando chamada dentro de uma função adiada, para recuperar o valor
+de erro passado através da chamada para panic().
+
+Exemplo:
+
+func protect(g func()) {
+	defer func() {
+		log.Println("done")
+		if err := recover(); err != nil {
+			log.Println("recovering from", err)
+		}
+	}()
+	log.Println("start")
+	g()
+}
+
+Algumas boas práticas são:
+Sempre recuperar do pânico no pacote
+Retoernar erros como valores de erro para as calls do package
+
+Exemplo:
+
+import {
+	"fmt"
+	"parse"
+)
+
+func main() {
+	var examples = []string{
+		"1 2 3 4 5",
+		"100 50 25 12.5 6.25",
+		"2 + 2 = 4",
+		"1st class",
+		"",
+	)
+
+	for _, ex := range examples {
+    	fmt.Printf("Parsing %q:\n ", ex)
+      	nums, err := parse.Parse(ex)
+        if err != nil {
+			fmt.Println(err)
+			continue
+		}
+		fmt.Println(nums)
+	}
+}
+
+Verificar a existência do pacote testing.
+
+Uma boa prática é reunir as entradas de teste e os resultados esperados. Cada entrada na tabela
+se torna um caso completo, com entradas e resultados esperados.
+
+Exemplo:
+
+var tests = []struct{
+	in string
+	out string
+}{
+	{"1 2 3 4 5", "1 2 3 4 5"},
+	{"100 50 25 12.5 6.25", "100 50 25 12.5 6.25"},
+	{"2 + 2 = 4", "2 + 2 = 4"},
+	{"1st class", "1st class"},
+	{"", ""},
+}
+
+func TestFunction(t *testing.T) {
+    for i, tt := range tests {
+        s := FuncToTested(tt.in)
+        if s != tt.out {
+            t.Errorf("Test %d: expected %q, got %q", i, tt.out, s)
+        }
+	}
+}
+
+Se muitas funções de teste tiverem que ser escritas assim, pode ser util escrever um teste real
+em uma função auxiliar verify:
+
+func verify(t *testing.T, testnum int, testcase, input, output, expected string) {
+    if input != output {
+        t.Errorf("Test %d: expected %q, got %q", testnum, expected, output)
+    }
+}
+
+func TestFunction(t *testing.T) {
+    for i, tt := range tests {
+        s := FuncToTested(tt.in)
+        verify(t, i, tt.in, s, tt.out, tt.out)
+	}
+}
+
+
 */
