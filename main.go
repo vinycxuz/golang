@@ -1,65 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
 
-// TIP <p>To run your code, right-click the code and select <b>Run</b>.</p> <p>Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.</p>
-type ListNode struct {
-	Val  int
-	Next *ListNode
+func HelloServer(w http.ResponseWriter, req *http.Request) {
+	fmt.Println("Hello World")
+	log.Println(req.URL.Path)
+	fmt.Fprint(w, "oi"+req.URL.Path[1:])
 }
 
 func main() {
-	PrintMessage("ola")
-	fmt.Println(toFahrenheit(32))
-
-	example := &ListNode{1, &ListNode{1, &ListNode{3, nil}}}
-	example2 := &ListNode{2, &ListNode{3, &ListNode{4, nil}}}
-
-	example3 := mergeTwoLists(example, example2)
-
-	imprimirList(example3)
-}
-
-func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
-	endList := new(ListNode)
-	head := endList
-	for list1 != nil && list2 != nil {
-		if list1.Val <= list2.Val {
-			head.Next = list1
-			list1 = list1.Next
-		} else {
-			head.Next = list2
-			list2 = list2.Next
-		}
-		head = head.Next
+	http.HandleFunc("/", HelloServer)
+	err := http.ListenAndServe("localhost:8080", nil)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err.Error())
 	}
-	if list1 != nil {
-		head.Next = list1
-	}
-	if list2 != nil {
-		head.Next = list2
-	}
-	return endList.Next
-}
-
-func imprimirList(list *ListNode) {
-	atual := list
-	for atual != nil {
-		fmt.Printf("%d", atual.Val)
-		atual = atual.Next
-	}
-	fmt.Println("nil")
-}
-
-func singleNumber(nums []int) int {
-	aux := 0
-	for _, value := range nums {
-		aux ^= value
-		fmt.Println(aux)
-	}
-	return aux
-
 }
 
 /*
