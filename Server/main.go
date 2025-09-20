@@ -1,25 +1,5 @@
 package Server
 
-import (
-	"fmt"
-	"log"
-	"net/http"
-)
-
-func HelloServer(w http.ResponseWriter, req *http.Request) {
-	fmt.Println("Hello World")
-	log.Println(req.URL.Path)
-	fmt.Fprint(w, "oi"+req.URL.Path[1:])
-}
-
-func main() {
-	http.HandleFunc("/", HelloServer)
-	err := http.ListenAndServe("localhost:8080", nil)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err.Error())
-	}
-}
-
 /*
 1. TCP server
 	GO é muito útil para escrever aplicações web.
@@ -148,5 +128,71 @@ var1, found := request.Form["var1"]
 
 Exemplo de http simples:
 
+import (
+	"fmt"
+	"net/http"
+)
+
+var urls = []string{
+	"http://www.google.com/",
+    "http://golang.org/"
+}
+
+func main() {
+    for _, url := range urls {
+        resp, err := http.Head(url
+        if err != nil {
+            fmt.Println(err)
+	}
+	fmt.Println(url, ":", resp.Status)
+	}
+}
+
+Neste exemplo eu executo as requisições HEAD HTTP e retorno o status de cada um.
+Algumas funções úteis que são utilizadas do pacote http:
+
+http.Redirect(w, ResponseWriter, r *Resquest, url string, code int)
+
+http.NotFound(w ResponseWriter, r *Request)
+
+http.Error(w ResponseWriter, msg string, code int)
+
+Um simples exemplo com duas chamadas de roteamento:
+
+http.HandleFunc("/test1", SimpleServer)
+http.HandleFUnc("/test2", FormServer)
+
+package main
+import (
+"net/http"
+"io"
+)
+
+const form = `<html><body><form action="#" method="post" name="bar">
+<input type="text" name="in"/>
+<input type="submit" value="Submit"/>
+</form></body></html>`
+
+func SimpleServer(w http.ResponseWriter, request *http.Request) {
+	io.WriteString(w, "<h1>hello, world</h1>")
+}
+
+func FormServer(w http.ResponseWriter, request *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+
+	switch request.Method {
+		case "GET":
+			io.WriteString(w, form);
+		case "POST":
+			io.WriteString(w, request.FormValue("in"))
+}
+
+func main() {
+  http.HandleFunc("/test1", SimpleServer)
+  http.HandleFunc("/test2", FormServer)
+  if err := http.ListenAndServe("0.0.0.0:3000", nil); err != nil {
+    panic(err)
+  }
+}
 
 */
