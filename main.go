@@ -1,6 +1,7 @@
 package main
 
 import (
+	"awesomeProject/DataStructures"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,11 +14,11 @@ func HelloServer(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", HelloServer)
-	err := http.ListenAndServe("localhost:8080", nil)
-	if err != nil {
-		log.Fatal("ListenAndServe: ", err.Error())
-	}
+	cat := new(DataStructures.List)
+	cat.InserirInicio(3)
+	cat.InserirInicio(3)
+	fmt.Println(cat.Busca(3))
+	cat.Imprimir()
 }
 
 /*
