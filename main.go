@@ -19,6 +19,13 @@ func main() {
 	cat.InserirInicio(3)
 	fmt.Println(cat.Busca(3))
 	cat.Imprimir()
+
+	dog := new(DataStructures.List2)
+	dog.InserirInicio2(3)
+	dog.InserirInicio2(4)
+	dog.InserirFinal2(2)
+	dog.ImprimirCrescente()
+	dog.ImprimirDecrescente()
 }
 
 /*
