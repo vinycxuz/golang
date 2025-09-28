@@ -1,5 +1,7 @@
 package Concurrency
 
+import "fmt"
+
 /*
 1. Concurrency
 	Concorrência por definição, é a capacidade de decompor um programa de computador ou algoritmo
@@ -148,4 +150,57 @@ func main(){
 		fmt.Println(value)
 	}
 }
+
+E existe um canal com buffer:
+
+channelName := make(chan int, 2)
+
+Isso significa que pode receber até 2 valores. Acima disso, dará deadlock. Assim como envio vazio, também pode dar deadlock.
+
 */
+
+func Merge(left, right []int) []int {
+	merged := make([]int, 0, len(left)+len(right))
+	for len(left) > 0 || len(right) > 0 {
+		if len(left) == 0 {
+			return append(merged, right...)
+		} else if len(right) == 0 {
+			return append(merged, left...)
+		} else if left[0] < right[0] {
+			merged = append(merged, left[0])
+			left = left[1:]
+		} else {
+			merged = append(merged, right[0])
+			right = right[1:]
+		}
+	}
+	return merged
+}
+
+func MergeSort(data []int) []int {
+	if len(data) <= 1 {
+		return data
+	}
+	done := make(chan bool)
+	mid := len(data) / 2
+	var left []int
+
+	go func() {
+		left = MergeSort(data[:mid])
+		done <- true
+	}()
+	right := MergeSort(data[mid:])
+	<-done
+	return Merge(left, right)
+}
+
+func main() {
+	// Example usage
+	data := []int{38, 27, 43, 3, 9, 82, 10}
+	sortedData := MergeSort(data)
+	fmt.Println("Sorted Data:", sortedData)
+}
+
+/*
+
+ */
