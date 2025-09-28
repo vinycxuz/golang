@@ -1,6 +1,9 @@
 package Concurrency
 
-import "fmt"
+import (
+	"fmt"
+	"sync"
+)
 
 /*
 1. Concurrency
@@ -202,5 +205,36 @@ func main() {
 }
 
 /*
+7. WaitGroups
+	Uma WaitGroup espera por um conjunto de goroutines terminarem. O contador é incrementado quando uma goroutine é iniciada e decrementado quando a goroutine termina.
+A função Wait bloqueia até que o contador chegue a zero.
 
- */
+Podemos usar com as seguintes funções:
+
+.Add(int): função recebe um valor inteiro que é essencialmente o número de goroutines. Deve ser executada antes de uma goroutine.
+
+.Done(int): função chamada dentro da goroutine para sinalizar que foi executada com sucesso.
+
+.Wait(): bloqueia o programa até que todas as goroutines tenham sido executadas.
+
+Exemplo completo:
+*/
+
+func WelcomeMessage() {
+	fmt.Println("oi")
+}
+
+func mainWG() {
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		WelcomeMessage()
+		wg.Done()
+	}()
+	go func() {
+		fmt.Println("Hello World")
+		wg.Done()
+	}()
+
+	wg.Wait()
+}
