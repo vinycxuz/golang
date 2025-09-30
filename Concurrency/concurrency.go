@@ -238,3 +238,40 @@ func mainWG() {
 
 	wg.Wait()
 }
+
+/*
+8. Mutex
+	Um Mutex serve para proteger seções críticas do código, impedindo que outros processos entrem em uma seção crítica de dados enquanto
+ outro processo já está nela. Isso é feito através de dois métodos principais: Lock() e Unlock().
+	Usando como exemplo um depósito e saque bancário, não podemos realizar ambos ao mesmo tempo, por isso, cada vez
+que lidamos com o saldo, a seção de código é crítica. Em GO, se uma goroutine estiver em uma seção crítica, o mutex não permitirá que nenhuma
+outra goroutine entre nessa seção até que a primeira tenha terminado e liberado o mutex.
+	Exemplo:
+*/
+
+func deposit(balance *int, amount int, myMutex *sync.Mutex, myWaitGroupt *sync.WaitGroup) {
+	myMutex.Lock()
+	*balance += amount
+	myMutex.Unlock()
+	myWaitGroupt.Done()
+}
+
+func withdraw(balance *int, amount int, myMutex *sync.Mutex, myWaitGroupt *sync.WaitGroup) {
+	myMutex.Lock()
+	*balance -= amount
+	myMutex.Unlock()
+	myWaitGroupt.Done()
+}
+
+func mainMutex() {
+	balance := 100
+	var myWaitGroup sync.WaitGroup
+	var myMutex sync.Mutex
+
+	myWaitGroup.Add(2)
+	go deposit(&balance, 20, &myMutex, &myWaitGroup)
+	withdraw(&balance, 30, &myMutex, &myWaitGroup)
+
+	myWaitGroup.Wait()
+	fmt.Println("Balance:", balance)
+}
