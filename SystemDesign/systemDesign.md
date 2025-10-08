@@ -50,10 +50,107 @@ Requisitos não funcionais são atributos do sistema que não está relacionado 
 Disponibilidade é a porcentagem de tempo que um serviço ou infraestrutura está acessível aos clientes e é operado em condições normais.
 Para medir a disponibilidade matematicamente, usamos a fórmula:
 
-A (Disponibilidade) = (Tempo total - Tempo de inatividade) / Tempo total
+    A (Disponibilidade) = (Tempo total - Tempo de inatividade) / Tempo total
 
 E existe a tabela dos nove noves da possível disponibilidade (pesquisar na internet).
 
 ## 2.2. Confiabilidade
+Confiabilidade é a probabilidade do serviço desempenhar as suas funções por um período específico.
+O cálculo que utilizamos:
 
+    MTBF (Tempo médio entre falhas) = (Tempo total decorrido - Soma do tempo de inatividade) / número total de falhas
+
+    MTTR (Tempo médio para reparo) = Tempo total de manutenção / número total de reparos
                                            
+Vale ressaltar que confiabilidade e disponibilidade são conceitos diferentes. Um sistema pode estar disponível 90% do tempo mas é confiável em apenas 80% do tempo.
+Confiabilidade é medida de execução do sistema, enquanto disponibilidade é uma medida de acessibilidade do sistema.
+Um ótimo exemplo é imaginar que o aplicativo pode estar funcionando corretamente, mas o servidor caiu, isso é disponibilidade. 
+
+## 2.3. Escalabilidade
+Escalabilidade é a capacidade de um sistema lidar com a quantidade crescente de carga de trabalho sem comprometer o desempenho. 
+Existem dois tipos de escalabilidade, vertical e horizontal.
+- Escalabilidade vertical refere-se ao fornecimento de recursos adicionais a um dispositivo existente (RAM, CPU...)
+- Escalabilidade horizontal é o número de máquinas na rede, utilizamos commodity hardware para os atrativos de custo-beneficio
+
+## 2.4. Maintainability
+Maintainability(a palavra em português manutenibilidade é lamentável rs) é a probabilidade de um sistema restaurar as suas funções num tempo especificado após a ocorrência da falha.
+Podemos dividir o conceito em três aspectos subjacentes:
+- Operabilidade: Facilidade de garantir o bom funcionamento
+- Lucidez: simplicidade do código. 
+- Modificabilidade: Facilidade de implementar mudanças
+
+MMTR (tempo médio de reparo) = Tempo total de manutenção / número total de reparos
+
+## 2.5. Tolerância a falhas
+Tolerância a falhas é a capacidade de um sistema de executar persistentemente mesmo se um ou mais de seus componentes falharem. As duas qualidades essencias que tornam toelrante a falhas é
+disponibilidade e confiabilidade. Existem algumas técnicas para alcançar a tolerância a falhas:
+- Replicação: manter várias cópias dos dados em diferentes máquinas. É um dos mais utilizados.
+- Ponto de verificação: é uma técnica que salva o estado do sistema em um armazenamento estável para recuperação posterior em caso de falhas. É como imaginar as versões de um programa, podemos
+voltar para uma versão anterior se algo der errado.
+
+# 4. Blocos de construção
+Problema de projetos se sistemas geralmente apresentam semelhanças, e nosso objetivo é separar blocos de construção para discutir detalhadamente 
+o design apenas uma vez. Esses blocos de construção podem ser reutilizados em vários projetos.
+
+## 4.1. DNS
+DNS é o serviço de nomenclatura da internet. Ele traduz o nome de um domínio para um endereço de IP. Tipos comuns de registro de recursos DNS são:
+- UM: Fornece o mapeamento do nome do host para um endereço IP. Exemplo tipo-nome-valor(A, relay1.main.something.io,104.18.2.119)
+- NS: Fornece o nome do host que é o DNS autoritativo para um nome de domínio. Exemplo tipo-nome-valor(NS, something.io, ns1.something.io)
+- CNAME: Fornece o mapeamento do nome do host para outro nome de host. Exemplo tipo-nome-valor(CNAME, www.something.io, servidor1.something.io)
+- MX: Fornece o mapeamento do nome do host para um servidor de email. Exemplo tipo-nome-valor(MX, something.io, mail.something.io)
+- TXT: Fornece o mapeamento do nome do host para um texto arbitrário. Exemplo tipo-nome-valor(TXT, something.io, "v=spf1 include:_spf.google.com ~all")
+
+Cache: DNS utiliza cache em várias camadas para melhorar a latência.
+
+Hierarquia: DNS é hierárquico, com servidores raiz no topo, seguidos por servidores de domínio de nível superior (TLD) e servidores autoritativos.
+Funciona mais ou menos assim: Temos no topo o Root, após o TLD, que é o .com, .net, .oi... e por ultimo o nome autoritário do domínio, que é o google.com, something.io...
+
+O DNS é um próprio sistema distribuído, e a sua natureza tem algumas vantagens:
+- Evita se tornar um ponto único de falha (SPOF)
+- Ele atinge baixa latência, pois os servidores DNS são distribuídos globalmente.
+- Ele obtém mais flexibilidade durante manutenções e atualizações.
+
+Existem 13 tipos de servidores DNS, nomeados de A a M com muitas instâncias espalhadas pelo mundo. Suas características o tornam escalável, confiável, consistente e disponível.3
+
+## 4.2. Load Balancers
+Load Balancers são usados para dividir de forma justa todas as solicitações dos clientes entre o conjunto de servidores disponíveis. Após o firewall, o load balancer é o primeiro ponto de contato para todas as solicitações dos clientes.
+Eles oferecenm:
+- Escalabilidade: Ao adicionar servidores, a capacidade do sistema aumenta.
+- Disponibilidade: Mesmo que alguns servidores fiquem inativos ou sofram falhas, o sistema permanece.
+- Desempenho: Os load balancers podem encaminhar solicitações para os servidores com menor carga.
+
+Além disso, oferecem alguns serviços essenciais, como:
+- Verificação de integridade: LB usam o protocolo heartbeat para monitorar a integridade.
+- Término de TLS/SSL
+- Análise preditiva: LB podem analisar o tráfego para identificar padrões e otimizar o desempenho.
+- Intervenção humana reduzida: LB podem automatizar tarefas como balanceamento de carga e failover.
+- Descoberta de serviço: As solicitações dos clientes são encaminhadas para servidores de hospedagem apropriados por meio de consulta ao registro de serviço.
+- Segurança: Melhorar a segurnaça mitigando ataques DDos.
+
+Quando um LB falha, o sistema pode ficar indiponível, para isso, normalmente as empresas utilizam clusters de LB.
+
+Existem LB em escala local e em escala global. 
+
+#### 4.2.1. Detalhes avançados de Load Balancers
+Os LB distribuem as solicitações dos clientes de acordo com um algoritmo, alguns deles são:
+- Round-robin scheduling: Cada servidor recebe uma solicitação por vez.
+- Weighted round-robin: Cada nó recebe um peso e os LB encaminham as solicitações dos clientes de acordo com o peso do nó.
+- Least Connections: Atribuir solicitações a servidores com menos conexões existentes.
+- Least response time
+- IP hash
+- URL hash
+
+## 7. Content Delivery Network (CDN)
+CDN é um grupo de servidores proxy distribuídos geograficamente. Um servidor proxy é um servidor intermediário entre um cliente e um servidor de origem.
+A CDN visa reduzir a latência, pois, se esforçam para ter largura de banda suficiente disponível no caminho e aproximar os usuários.
+
+Uma CDN armazena principalmente dois tipos de dados: estáticos (tipo de dado que não muda com frequência e permanece nos servidores por um longo período, como imagens, vídeos) e dinâmicos
+(tipo de dado que muda com frequência, como páginas da web personalizadas, feeds de notícias).
+
+Os requisitos funcionais de uma CDN são recuperar, solicitar, entregar, pesquisar, atualizar e excluir.
+Os requisitos não-funcionais são desempenho, disponibilidade, escalabilidade e confiabilidade.
+
+Os componentes básicos de uma CDN são:
+- clientes
+- sistema de roteamento: determina o servidor CDN mais próximo do cliente. Ele entende aonde o conteúdo é colocado, quantas solicitações são feitas
+a carga quee um conjunto específico de servidores está manipulando e o namespace URI(Uniform Resource Indetifier)
