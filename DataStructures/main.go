@@ -105,9 +105,3 @@ func (l2 *List2) ImprimirDecrescente() {
 }
 
 // arvores
-
-type Node3 struct {
-	value int
-	left *Node3
-	right *Node3
-}

@@ -12,7 +12,7 @@ func isPalindrome(x int) bool {
         return true
     }
     return false
-
+}
 
 https://leetcode.com/problems/palindrome-number/solutions/7142995/palindrome-by-vinycxuz-mq8m/
 */

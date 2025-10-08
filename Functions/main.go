@@ -7,13 +7,7 @@ type ListNode struct {
 	Next *ListNode
 }
 
-func main() {
-	example := &ListNode{1, &ListNode{1, &ListNode{3, nil}}}
-	example2 := &ListNode{2, &ListNode{3, &ListNode{4, nil}}}
-
-	mergeTwoLists(example, example2)
-}
-func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+func MergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
 	endList := new(ListNode)
 	list11 := list1
 	list22 := list2
@@ -26,11 +20,11 @@ func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
 			endList.Next = list11
 		}
 	}
-	imprimirList(endList)
+	ImprimirList(endList)
 	return endList
 }
 
-func imprimirList(list *ListNode) {
+func ImprimirList(list *ListNode) {
 	atual := list
 	for atual != nil {
 		fmt.Printf("%d", atual.Val)

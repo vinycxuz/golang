@@ -249,18 +249,18 @@ outra goroutine entre nessa seção até que a primeira tenha terminado e libera
 	Exemplo:
 */
 
-func deposit(balance *int, amount int, myMutex *sync.Mutex, myWaitGroupt *sync.WaitGroup) {
+func deposit(balance *int, amount int, myMutex *sync.Mutex, myWaitGroup *sync.WaitGroup) {
 	myMutex.Lock()
 	*balance += amount
 	myMutex.Unlock()
-	myWaitGroupt.Done()
+	myWaitGroup.Done()
 }
 
-func withdraw(balance *int, amount int, myMutex *sync.Mutex, myWaitGroupt *sync.WaitGroup) {
+func withdraw(balance *int, amount int, myMutex *sync.Mutex, myWaitGroup *sync.WaitGroup) {
 	myMutex.Lock()
 	*balance -= amount
 	myMutex.Unlock()
-	myWaitGroupt.Done()
+	myWaitGroup.Done()
 }
 
 func mainMutex() {
