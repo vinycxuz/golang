@@ -153,4 +153,72 @@ Os requisitos não-funcionais são desempenho, disponibilidade, escalabilidade e
 Os componentes básicos de uma CDN são:
 - clientes
 - sistema de roteamento: determina o servidor CDN mais próximo do cliente. Ele entende aonde o conteúdo é colocado, quantas solicitações são feitas
-a carga quee um conjunto específico de servidores está manipulando e o namespace URI(Uniform Resource Indetifier)
+a carga que um conjunto específico de servidores está manipulando e o namespace URI(Uniform Resource Identifier)
+- servidores Scrubber: são usados para separar o tráfego legítimo do tráfego malicioso.
+- Servidores de borda: são servidores CDN que armazenam em cache o conteúdo mais próximo dos clientes.
+- Sistema de distribuição: o sistema de distribuição é responsável por distribuir conteúdos para todos os servidores de borda em diferentes instalações de CDN
+- Servidores de origem: são os servidores onde o conteúdo original é armazenado.
+- Sistema de gerenciamento: é responsável por monitorar e gerenciar todos os componentes da CDN.
+
+Fluxo de trabalho:
+1. Os servidores de origem fornecem a delegação de namespace URI para o sistema de roteamento CDN.
+2. O servidor de origem publica o conteúdo no sistema de distribuição responsável pela distribuição de dados entre os servidores proxy.
+3. O sistema de distribuição de conteúdo manda o contepudo entre os servidores proxy e fornece feedback ao sistema de roteamento para otimizar a seleçao do servidor proxy mais próximo para o cliente solicitante.
+4. O cliente solicita ao sistema de roteamento um servidor proxy próximo.
+5. O sistema de roteamento de solicitações retorna o endereço de IP de um servidor proxy aprorpiado. 
+6. O cliente solicita rotas através dos servidores de depuração por motivo de segurança.
+7. O servidor de depuração encaminha o tráfego bom para o servidor proxy de borda
+8. O servidor proxy de borda responde ao cliente com o conteúdo solicitado.
+
+### 7.1. Estratégias de cache
+Identificar o conteúdo a ser armazenamo em cache é importante para fornecer um bom desempenho. O push CDN o conteúdo é enviado automaticamente para os servidores proxy da CDN a partir do servidor de origem nesse modelo.
+O push é apropriado para conteúdo estático, na qual o servidor de origem decide qual o conteúdo irá entregar aos usuários que utilizam CDN. Oposto paralelo, o Pull CDN é uma forma os servidores proxy mantêm os arquivos por um certo período e, em seguida, removem
+do cache se não forem mais solicitados, sendo ideal para alterações frequentes e alta carga de tráfego.
+
+Para facilitar o processo, uma CDN segue uma estrutura de árvore para facilitar o processo de distribuição de dados para o servidor de origem. Além disso, existem técnicas que utilizamos para rotear usuários para o servidor proxy mais próximo, são eles o redirecionamento de DNS,
+anycast (metodologia de roteamento na qual todos os servidores de borda compartilham o mesmo endereço de IP, utilizando BGP para rotear clientes) e redirecionamento HTTP. Exemplo abaixo:
+
+          <img class="fb_logo" src="https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg"> 
+
+Outro fator importantíssimo é a consistência de conteúdo em CDN, pois, o conteúdo pode ser atualizado com frequência. A sondagem periódica é uma técnico na qual os servidores proxy solicitam periodicamente
+ao servidor de origem dados atualizados e alteram o conteúdo do cache de acordo. Devido os TTR (time-to-refresh), uma outra abordagem interessante é o TTL, abordagem na qual cada objeto tem seu TTL atribuído a ele pelo servidor de origem.
+TTL define o tempo de expiração do conteúdo. 
+
+### 7.2. Implantação de CDN
+Antes de instalar o recurso CDN, precisamos considerar nos perguntar:
+
+- Quais são os melhores locais para instalar os servidores proxy para utilizar o máximo a tecnologia CDN?
+- Quantos servidores proxy devemos instalar?
+
+Os servidores proxy devem ser instalados em locais de rede com boa conectividade. Algumas opções são on-premises (IXP) e off-premises (data centers de terceiros).
+O push preditivo é um campo de pesquisa significativo para decidir o que enviar para os servidores proxy. A análise preditiva pode ser usada para prever o conteúdo que será solicitado com mais frequência e, em seguida, enviar esse conteúdo para os servidores proxy antes que os clientes o solicitem.
+E para isso, podemos usar medições como o ProxyTeller. Os benefícios de ter um ISP como um parceiro CDN são:
+- Um nó CDN reduz a quantidade de largura de banda externa que os ISPs precisam e pela qual pagam. O SLA definido pelos ISPs com os provedores de servidores proxy pode beneficiá-los economicamente.
+- Aproximar o conteúdo dos usuários reduz os dados no núcleo da Internet.
+
+A maioria das empresas não criam a sua própria CDN. Em vez disso, elas utilizam os serviços de um provedor de CDN, exemplo são Akamai, Cloudflare, Fastly e outros. 
+
+Importante frizarmos cada uma das decisões em cada um dos requisitos não funcionais que um CDN deve atender detalhadamente:
+
+a) Desempenho:
+- Servidores proxy geralmente fornecem conteúdo RAM
+- Sercidores proxy CDN são colocados próximos do usuário para fornecer acesso mais rápido
+- Uma CDN também pode ser provedora de servidores proxy localizados no ISP ou IXP, para lidar alto tráfego. 
+- O sistema de roteamento de solicitações garante que os usuários sejam direcionados aos servidores proxy  mais próximos.
+- Os servidores proxy tem conteúdo de cauda longa, armazenados em sistemas não voláteis. 
+- Servidores proxy podem ser implementados em cadamas, onde se uma não tiver conteúdo, a solicitação pode ser atendida pela próxima camada.
+
+b) Disponibilidade
+- Uma CDN pode lidar com alto tráfego e falhas devido à natureza dsitribuída, uma vez que garante em cache, além de servidores de borda podem ser disponibilizados
+por meio de redundância e usar LB para distribuir o tráfego entre eles.
+
+c) Escalabilidade
+- Elimina a necessidade de alta largura de banda no servidor de origem.
+- é possível escalar horizontalmente
+- Arquitetura de camadas resolve o problema das limitações de escalabilidade horizontal.
+
+d) Confiabilidade
+- Uma CDN garante a ausência de único ponto de falha, além de lidar com tráfego massivo
+- Servidores scrubber
+- protocolo heartbeat para monitorar a integridade dos servidores proxy
+
