@@ -29,10 +29,5 @@ A ausência de identificadores de teste, hooks para executar operações de setu
 Porém, essa 'atitude' de Go é intencional, pois, ela espera que os autores dos testes façam esse trabalho por conta própria, mantendo a simplicidade e a leveza da linguagem.
 Um bom teste exibe clareza e é sucinto no sintoma do problema.
 
-2. Evitar testes frágeis
-	Uma aplicação que falha com novas entradas mas elas são válidas é chamada de buggy. Um teste que falha de forma frágil quando uma alteração correta foi feita no programa, é chamado de
-frágil ou brittle test. Os testes frágeis, que falham com quaisquer alteração no código de produção, às vezes são piores do que nenhum teste, pois eles minam a confiança no conjunto de testes,
-chamas comumente de detectores de mudanças ou testes de status quo.
-
-
+No intuito de nos ajudar (se alguém tiver vendo esse material), vamos fazer um overview sobre os testes no geral e, como estou adotando o .md para isso, vou seguir por lá.
 */
