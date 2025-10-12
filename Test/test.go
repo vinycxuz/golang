@@ -1,5 +1,22 @@
 package Test
 
+import (
+	"fmt"
+	"time"
+)
+
+// exemplo Person para mostrar alguns recursos de testes em Go
+type Person struct {
+	age int
+}
+
+func NewPerson(age int) (*Person, error) {
+	if age < 0 {
+		return nil, fmt.Errorf("idade não pode ser negativa")
+	}
+	return &Person{age: age}, nil
+}
+
 func IsPalindrome(s string) bool {
 	for i := range s {
 		if s[i] != s[len(s)-1-i] {
@@ -7,6 +24,19 @@ func IsPalindrome(s string) bool {
 		}
 	}
 	return true
+}
+
+func Sum(a, b int) int {
+	return a + b
+}
+
+func QuickFunc(name string) string {
+	return fmt.Sprintf("Exemplo %q de função rápida", name)
+}
+
+func SlowFunc(name string) string {
+	time.Sleep(5 * time.Second)
+	return fmt.Sprintf("Exemplo %q de função lenta", name)
 }
 
 /*
