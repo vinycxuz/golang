@@ -151,3 +151,16 @@ os testes mais legíveis e menos verbosos. Algumas funções úteis:
     assert.Contains(t, string, substring) // Verifica se uma string contém uma substring específica.
     assert.NotContains(t, string, substring) // Verifica se uma string não contém uma substring específica.
 
+Existem outros dois recursos importantes, benchmarks e fuzzing. Para garantir que um código seja executado dentro de um prazo aceitável, podemos aproveitar
+os benchmarks. Eles são funções especiais que começam com "Benchmark" e aceitam um ponteiro para testing.B como argumento. O Go executa a função de benchmark várias vezes.
+Já o fuzzing é uma técnica de teste automatizada que envolve a geração de entradas aleatórias ou semi-aleatórias para um programa, com o objetivo de identificar falhas, vulnerabilidades de segurança.
+
+### 1.5. Mocking
+Mocking é um dos pilares fundamentais dos testes unitários, pois, ela permite testar com dependências falsas ao invés de usar
+as reais, retornando dados esperados/inesperados e gerando erros apropriados.
+
+Alguns bons princípios para criar mocks:
+- Devemos testar o comportamento, não a implementação.
+- Precisam testar apenas uma única unidade de código.
+- Não precisamos depender de serviços externos.
+

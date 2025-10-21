@@ -222,3 +222,7 @@ d) Confiabilidade
 - Servidores scrubber
 - protocolo heartbeat para monitorar a integridade dos servidores proxy
 
+## 8. Distributed Monitoring
+O monitoramento é fundamental para analisar infraestruturas complexas, envolve coletar, interpretar e exibir dados sobre as interações entre processos em execução ao mesmo tempo. 
+Um bom sistema de monitoramento precisa definir claramente o que medir e em quais unidades, além de definir valores limites para as métricas 
+e as capacidades de informar as partes necessárias.  

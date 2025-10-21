@@ -147,3 +147,32 @@ func TestNewPerson_WithTenAsAge(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, 10, got.age)
 }
+
+func BenchmarkIsPalindrome(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		IsPalindrome("onibuseresubino")
+	}
+}
+
+func TestDecimalToRoman(t *testing.T) {
+	t.Run("Converte 1999 para romano", func(t *testing.T) {
+		got, err := DecimalToRoman(1999)
+		assert.Equal(t, "MCMXCIX", got)
+		assert.Nil(t, err)
+	})
+	t.Run("Converte 33 para romano", func(t *testing.T) {
+		got, err := DecimalToRoman(33)
+		assert.Equal(t, "XXXIII", got)
+		assert.Nil(t, err)
+	})
+	t.Run("Converte 4 para romano", func(t *testing.T) {
+		got, err := DecimalToRoman(4)
+		assert.Equal(t, "IV", got)
+		assert.Nil(t, err)
+	})
+	t.Run("Erro para número menor que 1", func(t *testing.T) {
+		got, err := DecimalToRoman(0)
+		assert.Empty(t, got)
+		assert.EqualError(t, err, "decimal number has to be from 1 to 3999")
+	})
+}

@@ -2,6 +2,7 @@ package Test
 
 import (
 	"fmt"
+	"sort"
 	"time"
 )
 
@@ -37,6 +38,47 @@ func QuickFunc(name string) string {
 func SlowFunc(name string) string {
 	time.Sleep(5 * time.Second)
 	return fmt.Sprintf("Exemplo %q de função lenta", name)
+}
+
+// Kata conversão para algarismos romanos
+func DecimalToRoman(decimalValue int) (romanNumber string, err error) {
+	if decimalValue < 1 || decimalValue > 3999 {
+		return "", fmt.Errorf("decimal number has to be from 1 to 3999")
+	}
+
+	romanNums := map[int]string{
+		1:    "I",
+		4:    "IV",
+		5:    "V",
+		9:    "IX",
+		10:   "X",
+		40:   "XL",
+		50:   "L",
+		90:   "XC",
+		100:  "C",
+		400:  "CD",
+		500:  "D",
+		900:  "CM",
+		1000: "M",
+	}
+
+	romanKeys := make([]int, len(romanNums))
+	for k := range romanNums {
+		romanKeys = append(romanKeys, k)
+	}
+	sort.Ints(romanKeys)
+
+	for decimalValue > 0 {
+		for i := 0; i < len(romanKeys); i++ {
+			if i == len(romanKeys)-1 || (decimalValue >= romanKeys[i] && decimalValue < romanKeys[i+1]) {
+				decimalValue -= romanKeys[i]
+				romanNumber += romanNums[romanKeys[i]]
+				break
+			}
+		}
+	}
+
+	return romanNumber, nil
 }
 
 /*
