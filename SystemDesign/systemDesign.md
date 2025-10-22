@@ -226,3 +226,104 @@ d) Confiabilidade
 O monitoramento é fundamental para analisar infraestruturas complexas, envolve coletar, interpretar e exibir dados sobre as interações entre processos em execução ao mesmo tempo. 
 Um bom sistema de monitoramento precisa definir claramente o que medir e em quais unidades, além de definir valores limites para as métricas 
 e as capacidades de informar as partes necessárias.  
+
+Para um projeto de monitoramento no lado do servidor, um exemplo geral do que precisamos considerar:
+- Monitorar processos locais críticos em um servidor
+- Monitorar qualquer anomalia no uso de CPU/MEMORIA/DISCO/REDE
+- Monitorar capacidade do servidor dee acessar serviços críticos fora do servidor. 
+- Monitorar os switches de rede, load balancers.
+- Monitorar consumo de energia nos servidores, racks e data center
+- Monitorar latência dos links e caminhos de rede
+- Monitorar status da rede nos pontos de peering
+
+Os principais componentes de um sistema de monitoramento distribuído são:
+Storage: banco de dados de séries temporáis para salvar as métricas coletadas, armazanamento blobs. Banco de dados de regras também.
+Data collector: precisaremos de um sistema de monitoramento para nos atualizar sobre os diversos data centers, utilizando a estratégia pull ou push.
+Service discovery: para descobrir novos serviços e instâncias, podemos utilizar o Consul, Zookeeper, EC2, Kubernetes.
+Querying service: para consultar os dados armazenados.
+Alerting service: para notificar os engenheiros sobre quaisquer anomalias detectadas.
+Visualization: para visualizar os dados coletados, como dashboards.
+
+## 9. Distributed Cache
+O cache dsitribuído é um sistema de armazenamento em cache que armazena dados em vários nós de cache distribuídos em uma rede.
+Ele é uma área de armazenamento não presistente, usado para armazenar dados lidos e gravados repetidamente. A adequação dela, se dá com a memória RAM.
+Os caches são geralmente pequenos, acessados com frequência e voláteis, utilizam o princípio da locality of reference. Os benefícios são:
+- Reduz a latência
+- Reduz a carga do banco de dados
+- Melhora a escalabilidade
+- Reduzem o custo de rede.
+
+E por que utilizar um cache distribuído? Porque evitamos 3 problemas, ponto único de falha, desacoplamento de dados em diferentes camadas e redução de latência.
+
+É importantíssimo ter alguns conceitos em mente para projetar um cache distribuído:
+
+a) Políticas de escrita
+Quando um cache armazena uma cópia ou parte dos dados, alguns questionamentos surgem sobre ordem de armazenamento. Vamos discutir.
+- Cache de escrita direta: grava em ambos, aumenta a latência mas gera consistência.
+- Cache de escrita atrasada: grava apenas no cache, reduz a latência mas pode gerar leituras obsoletas no banco de dados.
+- Cache de gravação: grava apenas no banco de dados, que ficará sempre atualizado mas não é a estratégia favorável à leitura de dados atualizados. 
+
+b) Políticas de despejo
+Um dos principais motivos pelos quais os caches têm um desempenho rápido é o seu tamanho. Porém, precisamos de um mecanismo para remoção desses caches acessados com menos frequencia. Algumas das
+estratégias são: LRU (Least Recently Used), LFU (Least Frequently Used), FIFO (First In First Out), MFU (Most Frequently Used) e MRU (Most Recently Used). O uso depende de cada caso de uso.
+
+c) Invalidação de cache
+Além da remoção por frequencia, também temos dados obsoletos ou desatualizados. Eles também são marcados para exclusão. Para isso, usamos TTL (time to live) ou TTR (time to refresh).
+As duas abordagens que podemos usar para lidar com esses itens desatualizados são: expiração ativa (verifica ativamente o TTL por daemon ou thread) e passiva (verifica o TTL no momento de uma entrada de cache).
+
+d) Mecanismos de armazenamento
+Usamos algumas técnicas para armazenar os dados em cache, como é um sistema dsitribuído, ele não é tão trivial assim. Podemos utilizar hashing em dois cenários, identificar o servidor de cache no sistema distrbuído e localizar entradas de cache em cada servidor, junto de 
+lista encadeada, pois, além de adicionar e remover entradas de cache rapidamente, também podemos manter a ordem das entradas para implementar políticas de despejo. Filtros Bloom é uma opção interessante para descobrir rapidamente e são bem úteis em grandes sistemas de cache ou banco de dados.
+
+e) Fragmentação em clusters de cache
+Para evitar SPOF e alta carga em uma única intância de cache, usamos sharding. Podemos fazer isso de duas maneiras:
+- Servidores de cache dedicados: aqui, separamos os servidores de aplicativos e web dos servidores de cache. A vantagem é flexibilidade em escolhas de hardware por funcionalidade e dimensionar servidores web/aplicativos e servidores de cache separadamente.
+- Co-located cache: aqui, o cache incorpora a funcionalidade de cache e serviço no mesmo host, evitando CAPEX e OPEX. O problema é que a falha de uma máquinha, resultará na perda de ambos os serviços.
+
+### 9.1.  Exemplo de passos para projetar um sistema de cache distribuído
+1. Requisitos funcionais e não funcionais
+Exemplo de requisito funcional: Inserir dados no cache e recuperar dados do cache. Para o não funcional, temos: alto desempenho, escalabilidade, disponibilidade e consistencia.
+Como é uma API simples, usando PUT e GET, vamos focar nas considerações do design.
+- Hardware: Se os dados forem grandes, podemos contruir um cache grande em servidores sharding, acrescentando um armazenamento secundário para persistência. 
+- Estrutura de dados: podemos usar tabela hash para aumentar a velocidade de acesso dos dados e lista encadeada para remoção dos dados em cache. 
+- Politica de escrita: Usaremos a política de escrita atrasada para reduzir a latência.
+- Politica de despejo: Usaremos LRU para remoção dos dados em cache, pois, com dados grandes, o conteúdo carregado recente provável ter mais visualizações. 
+
+O projeto detalhado ficaria:
+- as solicitações do cliente chegam em hosts de serviço por meio de um load balancer onde os clientes de cahce residem
+- cada cliente usa um hash consistente para identificar o servidor de cache, para em seguida encaminhar a solicitação ao servidor de cache
+- cada servidor de cache possui servidores primários e replicas
+- o serviço de configuração garante que todos os clientes tenham uma visão atualizada e consistente dos servidores cache
+- os serviços de monitoramente também podem ser usados para registrar e relatar diferentes métricas do serviço de cache. 
+
+A avaliação dos requisitos não funcionais seriam: 
+- Desempenho: 
+uso de hash representa uma complexidade de O log(n), sendo n o número de entradas no cache. Além disso, temos outros fatores como LRU, TCP e UDP que são bem rápidos e as replicas, que reduzem a latência.
+- Escalabilidade: 
+Podemos escalar horizontalmente adicionando mais servidores de cache. O hash consistente ajuda a minimizar a redistribuição de chaves quando novos servidores são adicionados ou removidos.
+- Disponibilidade:
+Os caches redundantes permitem alta disponibilidade
+- Consistência:
+Usamos a política de escrita atrasada, que pode levar a leituras obsoletas, mas é aceitável para muitos casos de uso de cache.
+
+### 9.2. Memcached vs Redis
+Memcached e Redis são dois sistemas de cache distribuído amplamente utilizados. Vamos apenas resumir um pouco dos dois, vale a pena estudar mais a fundo.
+Memcached é um cache distribuído de armazenamento chave-valor como strings. Ele também utiliza os componentes cliente e componente servidor, além de arquitetura "shared-nothing", significa que eles não tem
+conhecimento um do outro. Com uma consulta quase que determinística O(1), é extremamente rápido. Porém, ele não oferece persistência de dados, replicação ou suporte a estruturas de dados complexas.
+
+Redis é um repositório de estrutura de dados que pode ser usado como cache, banco de dados e corretor de mensagens. Ele oferece replicação integrada, failover automático e vários níveis de persistência, além de compreender protolocos
+Memcached. Um aspecto extremamente positivo do redis é que ele separa acesso aos dados do gerenciamento do cluster. O cluster integrado que proporciona alta disponibilidade
+é chamado de Redis Sentinel, realizando sharding automático e failover. Cada cluster do redis é mantido por um gerenciador que detecta falhas e executa esses failovers. Tambpem utiliza pipeling (combinando multiplas solicitações 
+do lado do cliente sem esperar uma resposta do servidor).
+
+No famoso x1, ficaria assim: 
+
+Simplicidade: Memcached é simples mas deixa a maior parte do trabalho para os devs. Redis já automatiza a maior parte das tarefas.
+Persistência: Redis oferece tanto por AOF (Append Only File) quanto por RDB (Redis Database Backup). Memcached não oferece persistência.
+Tipos de dados: Redis suporta vários tipos de dados, enquanto o Memcached suporta apenas strings.
+Uso de memória: Ambas permitem definir o tamanho máximo de memória para cache. 
+Multithreading: Memcached suporta multithreading, enquanto o Redis é single-threaded. Memcached pode ser a escolha certa em arquivos maiores.
+Replicação e alta disponibilidade: Redis oferece replicação integrada e failover automático com Redis Sentinel
+
+Em resumo, memcached é preferível em sistemas menores e mais simples, enquanto Redis é mais completo para sistemas complexos e com muita leitura e gravação.
+
